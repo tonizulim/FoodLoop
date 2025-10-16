@@ -7,6 +7,12 @@ Meanwhile, many people—especially low-income families, students, and the homel
 
 This mismatch between **food waste** and **food insecurity** represents both an environmental and social problem.
 
+
+
+https://github.com/user-attachments/assets/f92cbabc-0ea0-437e-9ace-0476bb7edfca
+
+
+
 ---
 
 ## 2. Target Users
