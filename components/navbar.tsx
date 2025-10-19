@@ -99,64 +99,18 @@ export function Navbar() {
         </div>
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-border py-4 space-y-2">
-            <Link href="/" className="block">
-              <Button
-                variant={pathname === "/" ? "secondary" : "ghost"}
-                size="sm"
-                className="w-full justify-start gap-2"
-              >
-                <Home className="h-4 w-4" />
-                Home
-              </Button>
-            </Link>
-            <Link href="/map" className="block">
-              <Button
-                variant={pathname === "/map" ? "secondary" : "ghost"}
-                size="sm"
-                className="w-full justify-start gap-2"
-              >
-                <Map className="h-4 w-4" />
-                Map
-              </Button>
-            </Link>
-            {user && (
-              <>
-                <Link href="/add-food" className="block">
-                  <Button
-                    variant={pathname === "/add-food" ? "secondary" : "ghost"}
-                    size="sm"
-                    className="w-full justify-start gap-2"
-                  >
-                    <Plus className="h-4 w-4" />
-                    Share Food
-                  </Button>
-                </Link>
-                <Link href="/my-listings" className="block">
-                  <Button
-                    variant={
-                      pathname === "/my-listings" ? "secondary" : "ghost"
-                    }
-                    size="sm"
-                    className="w-full justify-start gap-2"
-                  >
-                    <List className="h-4 w-4" />
-                    My Listings
-                  </Button>
-                </Link>
-                {user && (
-                  <Link href="/admin" className="block">
-                    <Button
-                      variant={pathname === "/admin" ? "secondary" : "ghost"}
-                      size="sm"
-                      className="w-full justify-start gap-2"
-                    >
-                      <Shield className="h-4 w-4" />
-                      Admin
-                    </Button>
-                  </Link>
-                )}
-              </>
-            )}
+            {navLinks.map(({ href, label, icon: Icon }) => (
+              <Link key={href} href={href} className="block">
+                <Button
+                  variant={pathname === href ? "secondary" : "ghost"}
+                  size="sm"
+                  className="w-full justify-start gap-2"
+                >
+                  <Icon className="h-4 w-4" />
+                  {label}
+                </Button>
+              </Link>
+            ))}
 
             <div className="pt-2 border-t border-border space-y-2">
               {user ? (
