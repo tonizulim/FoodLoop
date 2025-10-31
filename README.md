@@ -22,4 +22,4 @@
 ### Semester Assignments
 
 - Link to Assignment 1: [**Assignment 1**](https://github.com/tonizulim/FoodLoop/blob/main/assignments/1_assignment.md)
-
+- Link to Assignment 2: [**Assignment 2**](https://github.com/tonizulim/FoodLoop/blob/main/assignments/2_assignment.md)
