@@ -1,30 +1,41 @@
-import {
-  integer,
-  pgTable,
-  varchar,
-  serial,
-  text,
-  timestamp,
-  boolean,
-  doublePrecision,
-} from "drizzle-orm/pg-core";
+import { pgTable, integer, varchar, boolean, timestamp, point, text } from "drizzle-orm/pg-core";
 
-export const usersTable = pgTable("users", {
+export const Role = pgTable("Role", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  name: varchar({ length: 255 }).notNull(),
-  age: integer().notNull(),
-  isAdmin: boolean("is_admin").notNull().default(false),
-  email: varchar({ length: 255 }).notNull().unique(),
+  role: varchar({ length: 50 }).notNull()
 });
 
-export const items = pgTable("items", {
+export const Shop = pgTable("Shop", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  title: text("title").notNull(),
-  description: text("description").notNull(),
-  address: text("address").notNull(),
-  userId: integer("user_id")
-    .notNull()
-    .references(() => usersTable.id),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  expiresAt: timestamp("expires_at").notNull(),
+  location: point("location"),
+  image: varchar({ length: 500 }),
+  admin_id: integer().references(() => User.id).notNull(),
+  user_id: integer().references(() => User.id)
+});
+
+
+export const User = pgTable("User", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  email: varchar({ length: 255 }).notNull().unique(),
+  password: varchar({ length: 255 }).notNull(),
+  salt: varchar({ length: 255 }).notNull(),
+  refresh_token: varchar({ length: 500 }),
+  role_id: integer().references(() => Role.id).notNull(),
+});
+
+
+export const Food = pgTable("Food", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  type: varchar({ length: 50 }).notNull()
+});
+
+export const Item = pgTable("Item", {
+  id: integer().primaryKey().generatedAlwaysAsIdentity(),
+  shop_id: integer().references(() => Shop.id).notNull(),
+  food_id: integer().references(() => Food.id).notNull(),
+  title: varchar({ length: 255 }).notNull(),
+  description: text(),
+  image: varchar({ length: 500 }),
+  published_at: timestamp().defaultNow(),
+  expires_at: timestamp()
 });
