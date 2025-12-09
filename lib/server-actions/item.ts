@@ -3,6 +3,7 @@ import { supabaseClient } from "../supabase/server";
 import { itemSchema } from "@/validators/itemValidator";
 import { formatZodError } from "../zodHelpers";
 import { Result } from "../result";
+import { logError } from "../logger";
 
 export async function getItems() {
   const { data: allPosts, error } = await supabaseClient
@@ -10,11 +11,12 @@ export async function getItems() {
     .select("*");
 
   if (error) {
-    console.error(error);
-    throw error;
+    console.error("Get error:", error);
+    await logError(error);
+    return Result.error("server error");
   }
 
-  return allPosts;
+  return Result.ok(allPosts);
 }
 
 export async function addItem(item: NewItem) {
@@ -30,11 +32,9 @@ export async function addItem(item: NewItem) {
 
   if (error) {
     console.error("Insert error:", error);
-    //make log in database and store this error there
+    await logError(error);
     return Result.error("server error");
   }
 
   return Result.ok("Successfully added new item.");
-
-  return data;
 }

@@ -10,8 +10,8 @@ export function useFoodForm() {
   const [loading, setLoading] = useState(false);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const [item, setItem] = useState<NewItem>({
-    shop_id: 1,
-    food_id: 1,
+    shop_id: 10,
+    food_id: 10,
     title: "",
     description: "",
     image: undefined,

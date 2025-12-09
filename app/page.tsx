@@ -24,9 +24,10 @@ export default function HomePage() {
 
   useEffect(() => {
     async function fetchListings() {
-      const items = await getItems();
-      console.log(items);
-      setListings(items); // set state with fetched data
+      const res = await getItems();
+      if (res.status) {
+        setListings(res?.data ?? []);
+      }
     }
 
     fetchListings();
