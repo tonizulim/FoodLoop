@@ -3,9 +3,14 @@
 import { useEffect, useState, useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import { getItems } from "@/lib/server-actions/item";
+import { Item } from "@/db/schema";
+import { InferModel } from "drizzle-orm";
+
+type ItemType = InferModel<typeof Item>;
 
 export default function HomePage() {
-  const [listings, setListings] = useState([]);
+  const [listings, setListings] = useState<ItemType[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredListings = useMemo(() => {
@@ -16,6 +21,16 @@ export default function HomePage() {
       // listing.location.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [listings, searchQuery]);
+
+  useEffect(() => {
+    async function fetchListings() {
+      const items = await getItems();
+      console.log(items);
+      setListings(items); // set state with fetched data
+    }
+
+    fetchListings();
+  }, []);
 
   return (
     <div className="min-h-[calc(100vh-4rem)]">
@@ -72,7 +87,11 @@ export default function HomePage() {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {listings.map((l) => {
+              return <p key={l.id}>{l.title}</p>;
+            })}
+          </div>
         )}
       </section>
     </div>
