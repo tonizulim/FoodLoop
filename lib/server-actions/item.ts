@@ -17,7 +17,7 @@ export function transformListings(raw: any[]): Listing[] {
     published_at: item.published_at,
     expires_at: item.expires_at,
 
-    type: item.Food?.type ?? "",
+    foodCategory: item.Food?.type ?? "",
     location: item.Shop?.location ?? "",
     email: item.Shop?.User?.email ?? "",
   }));

@@ -1,14 +1,21 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { FoodCard } from "@/components/FoodCard";
 import { useFilteredItems } from "@/hooks/useFilteredItems";
+import { useFoodCategory } from "@/hooks/useFoodCategory";
 
 export default function HomePage() {
   const { loading, filteredListings, searchQuery, setSearchQuery } =
     useFilteredItems();
+
+  const { foodCategory } = useFoodCategory();
+
+  useEffect(() => {
+    console.log(foodCategory);
+  }, [foodCategory]);
 
   return (
     <div className="min-h-[calc(100vh-4rem)]">
