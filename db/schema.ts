@@ -7,7 +7,6 @@ import {
   point,
   text,
 } from "drizzle-orm/pg-core";
-import { number } from "zod";
 
 export const Role = pgTable("Role", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
@@ -30,6 +29,7 @@ export const User = pgTable("User", {
   password: varchar({ length: 255 }).notNull(),
   salt: varchar({ length: 255 }).notNull(),
   refresh_token: varchar({ length: 500 }),
+  approved: boolean().default(false).notNull(),
   role_id: integer()
     .references(() => Role.id)
     .notNull(),
