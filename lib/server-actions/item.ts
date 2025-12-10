@@ -5,13 +5,22 @@ import { formatZodError } from "../zodHelpers";
 import { Result } from "../result";
 import { logError } from "../logger";
 
-export async function getUnexpiredItems() {
+export async function getActiveItems() {
   const now = new Date().toISOString();
 
-  const { data: allPosts, error } = await supabaseClient
-    .from("Item")
-    .select("*")
-    .gt("expires_at", now);
+  const { data: allPosts, error } = await supabaseClient.from("Item").select(
+    `
+    *,
+    Food (
+      type
+    ),
+    Shop (
+      location,
+      User!Shop_admin_id_User_id_fk (email)
+    )
+  `
+  );
+  //.gt("expires_at", now);
 
   if (error) {
     console.error("Get error:", error);
@@ -19,6 +28,7 @@ export async function getUnexpiredItems() {
     return Result.error("server error");
   }
 
+  console.log(allPosts);
   return Result.ok(allPosts);
 }
 

@@ -4,20 +4,11 @@ import { useState, useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { FoodCard } from "@/components/FoodCard";
-import { useExistingItems } from "@/hooks/useExistingItems";
+import { useFilteredItems } from "@/hooks/useExistingItems";
 
 export default function HomePage() {
-  const { listings, loading } = useExistingItems();
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const filteredListings = useMemo(() => {
-    return listings.filter(
-      (listing) => true
-      // listing.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      // listing.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      // listing.location.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [listings, searchQuery]);
+  const { loading, filteredListings, searchQuery, setSearchQuery } =
+    useFilteredItems();
 
   return (
     <div className="min-h-[calc(100vh-4rem)]">
@@ -48,14 +39,14 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Listings Section */}
       <section className="container mx-auto px-4 py-12">
         <div className="mb-8">
           <h2 className="text-2xl md:text-3xl font-bold mb-2">
             Available Food Pickups
           </h2>
+
           <p className="text-muted-foreground">
-            {filteredListings.length !== 0 && (
+            {!loading && filteredListings.length !== 0 && (
               <>
                 {filteredListings.length}{" "}
                 {filteredListings.length === 1 ? "listing" : "listings"}{" "}
@@ -65,7 +56,21 @@ export default function HomePage() {
           </p>
         </div>
 
-        {filteredListings.length === 0 ? (
+        {loading && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div
+                key={i}
+                className="animate-pulse p-4 border rounded-xl h-48 bg-muted/30"
+              >
+                <div className="h-32 w-full bg-muted rounded mb-4"></div>
+                <div className="h-4 bg-muted rounded w-3/4"></div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {!loading && filteredListings.length === 0 && (
           <div className="text-center py-16">
             <p className="text-lg text-muted-foreground">
               {searchQuery
@@ -73,11 +78,13 @@ export default function HomePage() {
                 : "No food listings available yet."}
             </p>
           </div>
-        ) : (
+        )}
+
+        {!loading && filteredListings.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {listings.map((l) => {
-              return <FoodCard item={l} />;
-            })}
+            {filteredListings.map((listing) => (
+              <FoodCard key={listing.id} item={listing} />
+            ))}
           </div>
         )}
       </section>
