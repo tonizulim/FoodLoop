@@ -8,13 +8,10 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Clock, User } from "lucide-react";
-import { Item } from "@/db/schema";
-import { InferModel } from "drizzle-orm";
-
-type ItemType = InferModel<typeof Item>;
+import { Listing } from "@/types/Listing";
 
 interface FoodCardProps {
-  item: ItemType;
+  item: Listing;
 }
 
 export function FoodCard({ item }: FoodCardProps) {
@@ -42,11 +39,11 @@ export function FoodCard({ item }: FoodCardProps) {
       <CardContent className="space-y-2">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <MapPin className="h-4 w-4 text-primary" />
-          <span className="font-medium">lokacija</span>
+          <span className="font-medium">{item.location}</span>
         </div>
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <User className="h-4 w-4" />
-          <span>user email</span>
+          <span>{item.email}</span>
         </div>
       </CardContent>
       <CardFooter className="text-xs text-muted-foreground">

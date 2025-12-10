@@ -1,13 +1,10 @@
 import { getActiveItems } from "@/lib/server-actions/item";
+import { Listing } from "@/types/Listing";
 import { useEffect, useMemo, useState } from "react";
-import { Item } from "@/db/schema";
-import { InferModel } from "drizzle-orm";
-
-type ItemType = InferModel<typeof Item>;
 
 export function useFilteredItems() {
   const [loading, setLoading] = useState(false);
-  const [listings, setListings] = useState<ItemType[]>([]);
+  const [listings, setListings] = useState<Listing[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
 
   async function fetchListings() {
@@ -15,7 +12,7 @@ export function useFilteredItems() {
     try {
       const res = await getActiveItems();
       if (res.status) {
-        //setListings(res?.data ?? []);
+        setListings(res?.data ?? []);
       }
       setLoading(false);
       return;

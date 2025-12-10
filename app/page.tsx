@@ -4,7 +4,7 @@ import { useState, useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { FoodCard } from "@/components/FoodCard";
-import { useFilteredItems } from "@/hooks/useExistingItems";
+import { useFilteredItems } from "@/hooks/useFilteredItems";
 
 export default function HomePage() {
   const { loading, filteredListings, searchQuery, setSearchQuery } =

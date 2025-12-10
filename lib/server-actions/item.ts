@@ -4,6 +4,24 @@ import { itemSchema } from "@/validators/itemValidator";
 import { formatZodError } from "../zodHelpers";
 import { Result } from "../result";
 import { logError } from "../logger";
+import { Listing } from "@/types/Listing";
+
+export function transformListings(raw: any[]): Listing[] {
+  return raw.map((item) => ({
+    id: item.id,
+    shop_id: item.shop_id,
+    food_id: item.food_id,
+    title: item.title,
+    description: item.description,
+    image: item.image,
+    published_at: item.published_at,
+    expires_at: item.expires_at,
+
+    type: item.Food?.type ?? "",
+    location: item.Shop?.location ?? "",
+    email: item.Shop?.User?.email ?? "",
+  }));
+}
 
 export async function getActiveItems() {
   const now = new Date().toISOString();
@@ -28,8 +46,7 @@ export async function getActiveItems() {
     return Result.error("server error");
   }
 
-  console.log(allPosts);
-  return Result.ok(allPosts);
+  return Result.ok(transformListings(allPosts));
 }
 
 export async function addItem(item: NewItem) {
