@@ -51,8 +51,8 @@ export const Item = pgTable("Item", {
   title: varchar({ length: 255 }).notNull(),
   description: text(),
   image: varchar({ length: 500 }),
-  published_at: timestamp().defaultNow(),
-  expires_at: timestamp(),
+  published_at: timestamp().defaultNow().notNull(),
+  expires_at: timestamp().notNull(),
 });
 
 export const Log = pgTable("Log", {

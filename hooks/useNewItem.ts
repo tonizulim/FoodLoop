@@ -1,17 +1,19 @@
 import { addItem } from "@/lib/server-actions/item";
+import { ItemFormState } from "@/types/ItemFormState";
 import { NewItem } from "@/types/NewItemDTO";
 import { useState } from "react";
-import { date } from "zod";
 
 export function useFoodForm() {
   //const router = useRouter();
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  const [foodFormState, setFoodFormState] = useState<ItemFormState>({
+    error: "",
+    success: false,
+    loading: false,
+    fieldErrors: {},
+  });
   const [item, setItem] = useState<NewItem>({
-    shop_id: 10,
-    food_id: 10,
+    shop_id: 1,
+    food_id: 1,
     title: "",
     description: "",
     image: undefined,
@@ -21,28 +23,42 @@ export function useFoodForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    setFieldErrors({});
-    setSuccess(false);
-    setLoading(true);
+    setFoodFormState((prev) => ({
+      ...prev,
+      error: "",
+      fieldErrors: {},
+      success: false,
+      loading: true,
+    }));
 
     try {
       const res = await addItem(item);
 
-      console.log(res);
-
       if (res?.status) {
-        setSuccess(true);
+        setFoodFormState((prev) => ({
+          ...prev,
+          success: true,
+          loading: false,
+        }));
+        return;
       } else {
-        setError(res?.message ? res?.message : "");
-        setFieldErrors(res?.error ? res?.error : {});
+        setFoodFormState((prev) => ({
+          ...prev,
+          error: res?.message ? res?.message : "",
+          fieldErrors: res?.error ? res?.error : {},
+          success: false,
+          loading: false,
+        }));
       }
     } catch (err) {
-      setError("Failed to post food listing");
+      setFoodFormState((prev) => ({
+        ...prev,
+        error: "Failed to post food listing",
+        loading: false,
+      }));
     }
-
-    setLoading(false);
+    return;
   };
 
-  return { item, setItem, handleSubmit, loading, error, success, fieldErrors };
+  return { item, setItem, handleSubmit, foodFormState };
 }

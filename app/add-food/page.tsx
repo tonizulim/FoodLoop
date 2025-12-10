@@ -15,15 +15,12 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle, CheckCircle2, MapPin } from "lucide-react";
 import { useFoodForm } from "@/hooks/useNewItem";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function AddFoodPage() {
-  const { item, setItem, handleSubmit, loading, error, success, fieldErrors } =
-    useFoodForm();
+  const { item, setItem, handleSubmit, foodFormState } = useFoodForm();
 
   const [hours, setHours] = useState<number>(2);
-
-  useEffect(() => console.log(fieldErrors), [fieldErrors]);
 
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-secondary/30 py-12">
@@ -46,14 +43,14 @@ export default function AddFoodPage() {
           </CardHeader>
           <form onSubmit={handleSubmit}>
             <CardContent className="space-y-6">
-              {error && (
+              {foodFormState.error && (
                 <Alert variant="destructive">
                   <AlertCircle className="h-4 w-4" />
-                  <AlertDescription>{error}</AlertDescription>
+                  <AlertDescription>{foodFormState.error}</AlertDescription>
                 </Alert>
               )}
 
-              {success && (
+              {foodFormState.success && (
                 <Alert className="border-primary bg-primary/10">
                   <CheckCircle2 className="h-4 w-4 text-primary" />
                   <AlertDescription className="text-primary">
@@ -64,11 +61,11 @@ export default function AddFoodPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="title">Food Title *</Label>
-                {error && fieldErrors.title && (
+                {foodFormState.error && foodFormState.fieldErrors.title && (
                   <Alert variant="destructive" className="p-2 text-xs">
                     <AlertCircle className="h-3 w-3" />
                     <AlertDescription className="text-xs">
-                      {fieldErrors["title"]}
+                      {foodFormState.fieldErrors["title"]}
                     </AlertDescription>
                   </Alert>
                 )}
@@ -84,15 +81,16 @@ export default function AddFoodPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description">Description *</Label>
-                {error && fieldErrors["description"] && (
-                  <Alert variant="destructive" className="p-2 text-xs">
-                    <AlertCircle className="h-3 w-3" />
-                    <AlertDescription className="text-xs">
-                      {fieldErrors["description"]}
-                    </AlertDescription>
-                  </Alert>
-                )}
+                <Label htmlFor="description">Description</Label>
+                {foodFormState.error &&
+                  foodFormState.fieldErrors["description"] && (
+                    <Alert variant="destructive" className="p-2 text-xs">
+                      <AlertCircle className="h-3 w-3" />
+                      <AlertDescription className="text-xs">
+                        {foodFormState.fieldErrors["description"]}
+                      </AlertDescription>
+                    </Alert>
+                  )}
                 <Textarea
                   id="description"
                   placeholder="Describe the food, quantity, and any special instructions..."
@@ -109,14 +107,15 @@ export default function AddFoodPage() {
 
               <div className="space-y-2">
                 <Label htmlFor="expires_at">Available For (hours) *</Label>
-                {error && fieldErrors["expires_at"] && (
-                  <Alert variant="destructive" className="p-2 text-xs">
-                    <AlertCircle className="h-3 w-3" />
-                    <AlertDescription className="text-xs">
-                      {fieldErrors["expires_at"]}
-                    </AlertDescription>
-                  </Alert>
-                )}
+                {foodFormState.error &&
+                  foodFormState.fieldErrors["expires_at"] && (
+                    <Alert variant="destructive" className="p-2 text-xs">
+                      <AlertCircle className="h-3 w-3" />
+                      <AlertDescription className="text-xs">
+                        {foodFormState.fieldErrors["expires_at"]}
+                      </AlertDescription>
+                    </Alert>
+                  )}
                 <Input
                   id="expires_at"
                   type="number"
@@ -141,9 +140,9 @@ export default function AddFoodPage() {
                 type="submit"
                 className="w-full"
                 size="lg"
-                disabled={loading || success}
+                disabled={foodFormState.loading || foodFormState.success}
               >
-                {loading ? "Posting..." : "Post Food Listing"}
+                {foodFormState.loading ? "Posting..." : "Post Food Listing"}
               </Button>
             </CardContent>
           </form>

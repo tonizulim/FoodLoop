@@ -6,6 +6,7 @@ import { Search } from "lucide-react";
 import { getItems } from "@/lib/server-actions/item";
 import { Item } from "@/db/schema";
 import { InferModel } from "drizzle-orm";
+import { FoodCard } from "@/components/FoodCard";
 
 type ItemType = InferModel<typeof Item>;
 
@@ -90,7 +91,7 @@ export default function HomePage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {listings.map((l) => {
-              return <p key={l.id}>{l.title}</p>;
+              return <FoodCard item={l} />;
             })}
           </div>
         )}
