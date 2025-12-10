@@ -1,17 +1,13 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import { getItems } from "@/lib/server-actions/item";
-import { Item } from "@/db/schema";
-import { InferModel } from "drizzle-orm";
 import { FoodCard } from "@/components/FoodCard";
-
-type ItemType = InferModel<typeof Item>;
+import { useExistingItems } from "@/hooks/useExistingItems";
 
 export default function HomePage() {
-  const [listings, setListings] = useState<ItemType[]>([]);
+  const { listings, loading } = useExistingItems();
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredListings = useMemo(() => {
@@ -22,17 +18,6 @@ export default function HomePage() {
       // listing.location.toLowerCase().includes(searchQuery.toLowerCase())
     );
   }, [listings, searchQuery]);
-
-  useEffect(() => {
-    async function fetchListings() {
-      const res = await getItems();
-      if (res.status) {
-        setListings(res?.data ?? []);
-      }
-    }
-
-    fetchListings();
-  }, []);
 
   return (
     <div className="min-h-[calc(100vh-4rem)]">

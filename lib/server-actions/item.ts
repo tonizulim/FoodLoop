@@ -5,10 +5,13 @@ import { formatZodError } from "../zodHelpers";
 import { Result } from "../result";
 import { logError } from "../logger";
 
-export async function getItems() {
+export async function getUnexpiredItems() {
+  const now = new Date().toISOString();
+
   const { data: allPosts, error } = await supabaseClient
     .from("Item")
-    .select("*");
+    .select("*")
+    .gt("expires_at", now);
 
   if (error) {
     console.error("Get error:", error);
