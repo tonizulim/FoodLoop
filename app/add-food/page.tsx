@@ -15,10 +15,19 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle, CheckCircle2, MapPin } from "lucide-react";
 import { useFoodForm } from "@/hooks/useNewItem";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useFoodCategory } from "@/hooks/useFoodCategory";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function AddFoodPage() {
   const { item, setItem, handleSubmit, foodFormState } = useFoodForm();
+  const { foodCategory } = useFoodCategory();
 
   const [hours, setHours] = useState<number>(2);
 
@@ -105,35 +114,60 @@ export default function AddFoodPage() {
                 />
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="expires_at">Available For (hours) *</Label>
-                {foodFormState.error &&
-                  foodFormState.fieldErrors["expires_at"] && (
-                    <Alert variant="destructive" className="p-2 text-xs">
-                      <AlertCircle className="h-3 w-3" />
-                      <AlertDescription className="text-xs">
-                        {foodFormState.fieldErrors["expires_at"]}
-                      </AlertDescription>
-                    </Alert>
-                  )}
-                <Input
-                  id="expires_at"
-                  type="number"
-                  value={hours}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    const hours = Number(e.target.value);
-                    setItem((prev) => ({
-                      ...prev,
-                      expires_at: new Date(
-                        Date.now() + hours * 60 * 60 * 1000
-                      ).toISOString(),
-                    }));
-                    setHours(hours);
-                  }}
-                />
-                <p className="text-sm text-muted-foreground">
-                  How long will this food be available for pickup?
-                </p>
+              <div className="flex flex-row space-x-2">
+                <div className="space-y-2">
+                  <Label htmlFor="expires_at">Available For (hours) *</Label>
+                  {foodFormState.error &&
+                    foodFormState.fieldErrors["expires_at"] && (
+                      <Alert variant="destructive" className="p-2 text-xs">
+                        <AlertCircle className="h-3 w-3" />
+                        <AlertDescription className="text-xs">
+                          {foodFormState.fieldErrors["expires_at"]}
+                        </AlertDescription>
+                      </Alert>
+                    )}
+                  <Input
+                    id="expires_at"
+                    type="number"
+                    value={hours}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      const hours = Number(e.target.value);
+                      setItem((prev) => ({
+                        ...prev,
+                        expires_at: new Date(
+                          Date.now() + hours * 60 * 60 * 1000
+                        ).toISOString(),
+                      }));
+                      setHours(hours);
+                    }}
+                  />
+                  <p className="text-sm text-muted-foreground">
+                    How long will this food be available for pickup?
+                  </p>
+                </div>
+                <div className="space-y-2 w-full">
+                  <Label htmlFor="category">Category *</Label>
+                  <Select
+                    value={item.food_id ? item.food_id.toString() : ""}
+                    onValueChange={(value) => {
+                      setItem((prev) => ({ ...prev, food_id: Number(value) }));
+                    }}
+                  >
+                    <SelectTrigger
+                      id="category"
+                      className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                    >
+                      <SelectValue placeholder="Select a food category" />
+                    </SelectTrigger>
+                    <SelectContent className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
+                      {foodCategory.map((opt) => (
+                        <SelectItem key={opt.id} value={opt.id.toString()}>
+                          {opt.type}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
               <Button

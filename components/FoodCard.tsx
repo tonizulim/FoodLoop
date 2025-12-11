@@ -7,7 +7,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Clock, User } from "lucide-react";
+import { MapPin, Clock, User, Utensils } from "lucide-react";
 import { Listing } from "@/types/Listing";
 
 interface FoodCardProps {
@@ -35,7 +35,12 @@ export function FoodCard({ item }: FoodCardProps) {
         <CardDescription className="line-clamp-2">
           {item.description}
         </CardDescription>
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Utensils className="h-4 w-4 text-primary" />
+          <span className="font-medium">{item.foodCategory}</span>
+        </div>
       </CardHeader>
+
       <CardContent className="space-y-2">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <MapPin className="h-4 w-4 text-primary" />

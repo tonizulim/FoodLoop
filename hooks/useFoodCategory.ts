@@ -1,11 +1,16 @@
+"use client";
+
+import { Food } from "@/db/schema";
 import { getFoodCategory } from "@/lib/server-actions/foodCategory";
 import { getActiveItems } from "@/lib/server-actions/item";
 import { Listing } from "@/types/Listing";
 import { useEffect, useState } from "react";
 
+type FoodType = typeof Food.$inferSelect;
+
 export function useFoodCategory() {
   const [loading, setLoading] = useState(false);
-  const [foodCategory, setFoodCategory] = useState<Listing[]>([]);
+  const [foodCategory, setFoodCategory] = useState<FoodType[]>([]);
 
   async function fetchFoodCategory() {
     setLoading(true);
