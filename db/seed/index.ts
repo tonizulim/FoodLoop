@@ -2,7 +2,7 @@ import "dotenv/config";
 import { db } from "../index.js";
 import { Role, Food, User, Shop, Item } from "../schema.js";
 import { Roles } from "../../constants/roles.js";
-import { Foods } from "../../constants/foods.js";
+import { FoodCategory } from "../../constants/foodCategory.js";
 
 async function runSeeds() {
   try {
@@ -26,23 +26,23 @@ async function runSeeds() {
     console.log("Adding roles: ");
     console.log(roles);
 
-    const foods = await db
+    const foodCategory = await db
       .insert(Food)
       .values([
-        { type: Foods.Bread },
-        { type: Foods.Meat },
-        { type: Foods.Pastry },
+        { type: FoodCategory.Bread },
+        { type: FoodCategory.Meat },
+        { type: FoodCategory.Pastry },
       ])
       .returning();
     console.log("Adding foods: ");
-    console.log(foods);
+    console.log(foodCategory);
 
     const superAdminRoleId = roles[0].id;
     const adminRoleId = roles[1].id;
     const userRoleId = roles[2].id;
-    const foodsBread = foods[0].id;
-    const foodsMeat = foods[1].id;
-    const foodsPastry = foods[2].id;
+    const bread = foodCategory[0].id;
+    const meat = foodCategory[1].id;
+    const pastry = foodCategory[2].id;
 
     const users = await db
       .insert(User)
@@ -98,7 +98,7 @@ async function runSeeds() {
       .values([
         {
           shop_id: 1,
-          food_id: foodsBread,
+          food_id: bread,
           title: "Fresh Baguette",
           description: "Daily baked baguette",
           image: "https://placehold.co/500x300",
@@ -106,7 +106,7 @@ async function runSeeds() {
         },
         {
           shop_id: 1,
-          food_id: foodsPastry,
+          food_id: pastry,
           title: "Chocolate Croissant",
           description: "Buttery and fresh",
           image: "https://placehold.co/500x300",
@@ -114,7 +114,7 @@ async function runSeeds() {
         },
         {
           shop_id: 2,
-          food_id: foodsMeat,
+          food_id: meat,
           title: "Beef Steak",
           description: "Grass-fed quality",
           image: "https://placehold.co/500x300",
