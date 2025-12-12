@@ -8,11 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Clock, User, Utensils } from "lucide-react";
-import { Listing } from "@/types/Listing";
-
-interface FoodCardProps {
-  item: Listing;
-}
+import { FoodCardProps } from "@/types/FoodCardProps";
 
 export function FoodCard({ item }: FoodCardProps) {
   const timeLeft = new Date(item.expires_at).getTime() - Date.now();

@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { FoodCard } from "@/components/FoodCard";
 import { useFilteredItems } from "@/hooks/useFilteredItems";
-import { useFoodCategory } from "@/hooks/useFoodCategory";
 import { useQueryState, parseAsInteger, parseAsString } from "nuqs";
 import {
   Select,
@@ -15,9 +14,7 @@ import {
 } from "@/components/ui/select";
 
 export default function HomePage() {
-  const { loading, filteredListings } = useFilteredItems();
-
-  const { foodCategory } = useFoodCategory();
+  const { loading, filteredListings, foodCategory } = useFilteredItems();
 
   const [filterFoodCategory, setFilterFoodCategory] = useQueryState(
     "filterFoodCategory",
@@ -49,7 +46,7 @@ export default function HomePage() {
             </p>
 
             {/* Search Bar */}
-            <div className="relative max-w-xl mx-auto mt-4 flex flex-row gap-2">
+            <div className="relative max-w-xl mx-auto mt-4 flex flex-col md:flex-row gap-2">
               <Search className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground pointer-events-none" />
               <Input
                 type="text"

@@ -2,8 +2,6 @@
 
 import { Food } from "@/db/schema";
 import { getFoodCategory } from "@/lib/server-actions/foodCategory";
-import { getActiveItems } from "@/lib/server-actions/item";
-import { Listing } from "@/types/Listing";
 import { useEffect, useState } from "react";
 
 type FoodType = typeof Food.$inferSelect;

@@ -15,7 +15,7 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle, CheckCircle2, MapPin } from "lucide-react";
 import { useFoodForm } from "@/hooks/useNewItem";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useFoodCategory } from "@/hooks/useFoodCategory";
 import {
   Select,
@@ -155,7 +155,7 @@ export default function AddFoodPage() {
                   >
                     <SelectTrigger
                       id="category"
-                      className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                      className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm h-12 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                     >
                       <SelectValue placeholder="Select a food category" />
                     </SelectTrigger>

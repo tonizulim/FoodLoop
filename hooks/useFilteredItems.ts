@@ -2,12 +2,18 @@ import { getActiveItems } from "@/lib/server-actions/item";
 import { Listing } from "@/types/Listing";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { Food } from "@/db/schema";
+import { useFoodCategory } from "./useFoodCategory";
+
+type FoodType = typeof Food.$inferSelect;
 
 export function useFilteredItems() {
   const searchParams = useSearchParams();
   const page = searchParams.get("page") ?? "1";
   const searchQuery = searchParams.get("query") ?? "";
   const filterFoodCategory = searchParams.get("filterFoodCategory") ?? "0";
+
+  const { foodCategory } = useFoodCategory();
 
   const [loading, setLoading] = useState(false);
   const [listings, setListings] = useState<Listing[]>([]);
@@ -40,5 +46,11 @@ export function useFilteredItems() {
     );
   }, [listings, searchQuery, filterFoodCategory]);
 
-  return { loading, filteredListings, searchQuery, filterFoodCategory };
+  return {
+    loading,
+    filteredListings,
+    searchQuery,
+    filterFoodCategory,
+    foodCategory,
+  };
 }

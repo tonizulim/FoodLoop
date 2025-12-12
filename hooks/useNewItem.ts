@@ -1,10 +1,13 @@
+"use client";
+
 import { addItem } from "@/lib/server-actions/item";
 import { ItemFormState } from "@/types/ItemFormState";
 import { NewItem } from "@/types/NewItemDTO";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export function useFoodForm() {
-  //const router = useRouter();
+  const router = useRouter();
   const [foodFormState, setFoodFormState] = useState<ItemFormState>({
     error: "",
     success: false,
@@ -20,6 +23,10 @@ export function useFoodForm() {
     published_at: new Date(Date.now()).toISOString(),
     expires_at: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(),
   });
+
+  useEffect(() => {
+    if (foodFormState.success) router.push("./");
+  }, [foodFormState.success]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
