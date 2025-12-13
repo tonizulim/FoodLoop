@@ -10,8 +10,17 @@ CREATE TABLE "Item" (
 	"title" varchar(255) NOT NULL,
 	"description" text,
 	"image" varchar(500),
-	"published_at" timestamp DEFAULT now(),
-	"expires_at" timestamp
+	"published_at" timestamp DEFAULT now() NOT NULL,
+	"expires_at" timestamp NOT NULL
+);
+--> statement-breakpoint
+CREATE TABLE "Log" (
+	"id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "Log_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),
+	"code" varchar(50),
+	"message" varchar(255) NOT NULL,
+	"details" text,
+	"hint" text,
+	"time" timestamp DEFAULT now()
 );
 --> statement-breakpoint
 CREATE TABLE "Role" (
@@ -21,7 +30,8 @@ CREATE TABLE "Role" (
 --> statement-breakpoint
 CREATE TABLE "Shop" (
 	"id" integer PRIMARY KEY GENERATED ALWAYS AS IDENTITY (sequence name "Shop_id_seq" INCREMENT BY 1 MINVALUE 1 MAXVALUE 2147483647 START WITH 1 CACHE 1),
-	"location" "point",
+	"location" "point" NOT NULL,
+	"address" varchar(200) NOT NULL,
 	"image" varchar(500),
 	"admin_id" integer NOT NULL,
 	"user_id" integer
@@ -33,6 +43,7 @@ CREATE TABLE "User" (
 	"password" varchar(255) NOT NULL,
 	"salt" varchar(255) NOT NULL,
 	"refresh_token" varchar(500),
+	"approved" boolean DEFAULT false NOT NULL,
 	"role_id" integer NOT NULL,
 	CONSTRAINT "User_email_unique" UNIQUE("email")
 );

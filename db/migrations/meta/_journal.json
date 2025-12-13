@@ -5,36 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1765208587829,
-      "tag": "0000_magical_iron_man",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1765319210387,
-      "tag": "0001_stiff_the_stranger",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1765319416752,
-      "tag": "0002_lean_mojo",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1765319782862,
-      "tag": "0003_white_joystick",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1765358067590,
-      "tag": "0004_needy_thunderbolt_ross",
+      "when": 1765652139043,
+      "tag": "0000_loud_lady_bullseye",
       "breakpoints": true
     }
   ]
