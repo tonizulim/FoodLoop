@@ -83,8 +83,16 @@ async function runSeeds() {
           admin_id: 1,
           user_id: userAdminId,
           image: "https://placehold.co/600x400",
+          location: [43.511649, 16.466764],
+          address: "Kampus",
         },
-        { admin_id: 2, user_id: userId, image: "https://placehold.co/600x400" },
+        {
+          admin_id: 2,
+          user_id: userId,
+          image: "https://placehold.co/600x400",
+          location: [43.5023, 16.4779],
+          address: "Žnjan",
+        },
       ])
       .returning();
     console.log("Adding shops: ");

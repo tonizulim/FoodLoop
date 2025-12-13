@@ -5,13 +5,14 @@ import { formatZodError } from "../zodHelpers";
 import { Result } from "../result";
 import { logError } from "../logger";
 import { Listing } from "@/types/Listing";
+import { LocationPoint } from "@/types/Location";
 
 const parsePoint = (
   pointStr: string | null | undefined
-): { x: number; y: number } | null => {
+): LocationPoint | null => {
   if (!pointStr) return null;
-  const [x, y] = pointStr.replace(/[()]/g, "").split(",").map(Number);
-  return { x, y };
+  const [lng, lat] = pointStr.replace(/[()]/g, "").split(",").map(Number);
+  return { lng, lat };
 };
 
 export function transformListings(raw: any[]): Listing[] {
