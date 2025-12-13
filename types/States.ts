@@ -6,3 +6,10 @@ export interface ItemFormState {
   loading: boolean;
   fieldErrors: Record<string, string>;
 }
+
+export interface FormStatus {
+  loading: boolean;
+  success: boolean;
+  error: string;
+};
+

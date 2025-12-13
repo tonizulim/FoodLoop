@@ -57,7 +57,6 @@ export default function LoginPage() {
       return;
     }
 
-    // Ako je login uspješan → redirect na home page
     router.push("/");
   };
 

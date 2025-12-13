@@ -1,7 +1,7 @@
 "use client";
 
 import { addItem } from "@/lib/server-actions/item";
-import { ItemFormState } from "@/types/ItemFormState";
+import { ItemFormState } from "@/types/States";
 import { NewItem } from "@/types/NewItemDTO";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
