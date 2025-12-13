@@ -15,7 +15,13 @@ export function FoodCard({ item }: FoodCardProps) {
   const hoursLeft = Math.floor(timeLeft / (1000 * 60 * 60));
 
   return (
-    <Card className="hover:shadow-lg transition-shadow">
+    <Card
+      className="
+    transition-all
+    hover:shadow-lg
+    hover:border-primary
+  "
+    >
       <CardHeader>
         <div className="flex items-start justify-between gap-2">
           <CardTitle className="text-xl">{item.title}</CardTitle>
@@ -40,7 +46,7 @@ export function FoodCard({ item }: FoodCardProps) {
       <CardContent className="space-y-2">
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <MapPin className="h-4 w-4 text-primary" />
-          <span className="font-medium">{item.location}</span>
+          <span className="font-medium">{item.address}</span>
         </div>
         <div className="flex items-center gap-2 text-sm text-muted-foreground">
           <User className="h-4 w-4" />

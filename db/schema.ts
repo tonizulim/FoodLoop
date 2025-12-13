@@ -15,7 +15,8 @@ export const Role = pgTable("Role", {
 
 export const Shop = pgTable("Shop", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  location: point("location"),
+  location: point("location").notNull(),
+  address: varchar({ length: 200 }).notNull(),
   image: varchar({ length: 500 }),
   admin_id: integer()
     .references(() => User.id)

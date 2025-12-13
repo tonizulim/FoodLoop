@@ -4,6 +4,8 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { Food } from "@/db/schema";
 import { useFoodCategory } from "./useFoodCategory";
+import { LocationPoint } from "@/types/Location";
+import { Item } from "@radix-ui/react-select";
 
 type FoodType = typeof Food.$inferSelect;
 
@@ -17,6 +19,9 @@ export function useFilteredItems() {
 
   const [loading, setLoading] = useState(false);
   const [listings, setListings] = useState<Listing[]>([]);
+
+  const [selectedLocation, setSelectedLocation] =
+    useState<LocationPoint | null>(null);
 
   async function fetchListings() {
     setLoading(true);
@@ -42,15 +47,22 @@ export function useFilteredItems() {
         listing.title.toLowerCase().includes(searchQuery.toLowerCase()) &&
         (Number(filterFoodCategory) != 0
           ? listing.food_id == Number(filterFoodCategory)
+          : true) &&
+        (selectedLocation
+          ? selectedLocation?.lng == listing.location.lng &&
+            selectedLocation?.lat == listing.location.lat
           : true)
     );
-  }, [listings, searchQuery, filterFoodCategory]);
+  }, [listings, searchQuery, filterFoodCategory, selectedLocation]);
 
   return {
     loading,
+    listings,
     filteredListings,
     searchQuery,
     filterFoodCategory,
     foodCategory,
+    selectedLocation,
+    setSelectedLocation,
   };
 }

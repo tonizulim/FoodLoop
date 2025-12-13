@@ -6,6 +6,14 @@ import { Result } from "../result";
 import { logError } from "../logger";
 import { Listing } from "@/types/Listing";
 
+const parsePoint = (
+  pointStr: string | null | undefined
+): { x: number; y: number } | null => {
+  if (!pointStr) return null;
+  const [x, y] = pointStr.replace(/[()]/g, "").split(",").map(Number);
+  return { x, y };
+};
+
 export function transformListings(raw: any[]): Listing[] {
   return raw.map((item) => ({
     id: item.id,
@@ -18,7 +26,8 @@ export function transformListings(raw: any[]): Listing[] {
     expires_at: item.expires_at,
 
     foodCategory: item.Food?.type ?? "",
-    location: item.Shop?.location ?? "",
+    location: parsePoint(item.Shop?.location) ?? { lng: 0, lat: 0 },
+    address: item.Shop?.address ?? "",
     email: item.Shop?.User?.email ?? "",
   }));
 }
@@ -26,8 +35,10 @@ export function transformListings(raw: any[]): Listing[] {
 export async function getActiveItems() {
   const now = new Date().toISOString();
 
-  const { data: allPosts, error } = await supabaseClient.from("Item").select(
-    `
+  const { data: allPosts, error } = await supabaseClient
+    .from("Item")
+    .select(
+      `
     *,
     Food (
       type
@@ -37,8 +48,8 @@ export async function getActiveItems() {
       User!Shop_admin_id_User_id_fk (email)
     )
   `
-  );
-  //.gt("expires_at", now);
+    )
+    .gt("expires_at", now);
 
   if (error) {
     console.error("Get error:", error);
