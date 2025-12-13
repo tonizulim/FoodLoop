@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 import maplibregl, { Map as MaplibreMap } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { Listing } from "@/types/Listing";
 import { MapProps } from "@/types/MapProps";
 
 export default function Map({

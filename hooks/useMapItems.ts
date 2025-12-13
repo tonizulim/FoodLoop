@@ -2,9 +2,7 @@
 
 import { getActiveItems } from "@/lib/server-actions/item";
 import { Listing } from "@/types/Listing";
-import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { useFoodCategory } from "./useFoodCategory";
 import { LocationPoint } from "@/types/Location";
 
 export function useMapItems() {
