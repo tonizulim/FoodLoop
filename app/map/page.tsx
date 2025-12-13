@@ -1,6 +1,6 @@
 "use client";
 
-import Map from "../../components/Map";
+//import Map from "../../components/Map";
 import { FoodCard } from "@/components/FoodCard";
 import MapLoadingSkeleton from "@/components/MapLoadingSkeleton";
 import ListingsLoadingSkeleton from "@/components/ListingsLoadingSkeleton";
@@ -22,11 +22,11 @@ export default function MapPage() {
   return (
     <div className="relative w-full h-full flex flex-row gap-4 p-4">
       <div className=" h-[90vh] flex-1 relative bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 rounded-lg border-2 border-green-200 dark:border-green-800 overflow-hidden">
-        <Map
+        {/* <Map
           listings={filteredListings}
           setSelectedLocation={setSelectedLocation}
           selectedLocation={selectedLocation}
-        />
+        /> */}
 
         <div className="absolute top-4 right-4 bg-white dark:bg-gray-900 rounded-lg shadow-lg p-3 space-y-2 text-sm">
           <div className="font-semibold text-gray-900 dark:text-gray-100">
