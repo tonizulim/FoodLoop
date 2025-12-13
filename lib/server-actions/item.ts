@@ -11,8 +11,8 @@ const parsePoint = (
   pointStr: string | null | undefined
 ): LocationPoint | null => {
   if (!pointStr) return null;
-  const [lng, lat] = pointStr.replace(/[()]/g, "").split(",").map(Number);
-  return { lng, lat };
+  const [lat, lng] = pointStr.replace(/[()]/g, "").split(",").map(Number);
+  return { lat, lng };
 };
 
 export function transformListings(raw: any[]): Listing[] {
@@ -46,7 +46,7 @@ export async function getActiveItems() {
     ),
     Shop (
       location,
-      User!Shop_admin_id_User_id_fk (email)
+      User!Shop_admin_id_User_id_fk (email),address
     )
   `
     )
