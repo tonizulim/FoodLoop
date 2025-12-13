@@ -1,13 +1,11 @@
+"use client";
+
 import { getActiveItems } from "@/lib/server-actions/item";
 import { Listing } from "@/types/Listing";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { Food } from "@/db/schema";
 import { useFoodCategory } from "./useFoodCategory";
 import { LocationPoint } from "@/types/Location";
-import { Item } from "@radix-ui/react-select";
-
-type FoodType = typeof Food.$inferSelect;
 
 export function useFilteredItems() {
   const searchParams = useSearchParams();
