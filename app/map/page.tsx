@@ -1,8 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Map from "../../components/Map";
-import { useFilteredItems } from "@/hooks/useFilteredItems";
 import { FoodCard } from "@/components/FoodCard";
 import MapLoadingSkeleton from "@/components/MapLoadingSkeleton";
 import ListingsLoadingSkeleton from "@/components/ListingsLoadingSkeleton";
