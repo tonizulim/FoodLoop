@@ -73,21 +73,21 @@ async function runSeeds() {
     console.log("Adding users: ");
     console.log(users);
 
-    const userAdminId = users[0].id;
-    const userId = users[1].id;
+    const userAdminId = users[1].id;
+    const userId = users[2].id;
 
     const shops = await db
       .insert(Shop)
       .values([
         {
-          admin_id: 1,
-          user_id: userAdminId,
+          admin_id: userAdminId,
+          user_id: userId,
           image: "https://placehold.co/600x400",
           location: [43.511649, 16.466764],
           address: "Kampus",
         },
         {
-          admin_id: 2,
+          admin_id: userAdminId,
           user_id: userId,
           image: "https://placehold.co/600x400",
           location: [43.5023, 16.4779],
