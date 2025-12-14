@@ -18,7 +18,8 @@ export default function Map({
 
     map.current = new maplibregl.Map({
       container: mapContainer.current,
-      style: "https://tiles.stadiamaps.com/styles/osm_bright.json",
+      style: process.env.NEXT_PUBLIC_MAP_URL,
+      //style: "https://tiles.stadiamaps.com/styles/osm_bright.json",
       center: [16.4402, 43.5081], // Split, Croatia
       zoom: 12,
     });
