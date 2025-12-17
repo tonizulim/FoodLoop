@@ -10,6 +10,7 @@ import {
   deleteFoodListing,
   editFoodListing,
   type FoodListing,
+  CurrentUser,
 } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,12 +31,13 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import { MapPin, Clock, Pencil, Trash2, AlertCircle } from "lucide-react";
+import formatDateDayMonthTime from "@/lib/helpers";
 
 export default function MyListingsPage() {
   const router = useRouter();
-  const [user, setUser] = useState(getCurrentUser());
+  const [user, setUser] = useState<CurrentUser | null>(null);
   const [listings, setListings] = useState<FoodListing[]>([]);
   const [editingListing, setEditingListing] = useState<FoodListing | null>(
     null
@@ -43,21 +45,26 @@ export default function MyListingsPage() {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
+    expiresAt: "",
+    publishedAt: "",
     location: "",
     address: "",
-    hours: "24",
   });
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
   useEffect(() => {
-    const currentUser = getCurrentUser();
-    if (!currentUser) {
-      router.push("/login");
-      return;
-    }
-    setUser(currentUser);
-    loadListings("1");
+    const loadUser = async () => {
+      const u = await getCurrentUser("1");
+      if (!u) {
+        router.push("/login");
+        return;
+      }
+      setUser(u);
+      loadListings("1");
+    };
+
+    loadUser();
   }, [router]);
 
   const loadListings = async (userId: string) => {
@@ -65,103 +72,64 @@ export default function MyListingsPage() {
     setListings(await userListings);
   };
 
-  // const handleDelete = async (id: string) => {
-  //   if (confirm("Are you sure you want to delete this listing?")) {
-  //     const result = deleteFoodListing(1);
-  //     if (await result) {
-  //       setSuccess("Listing deleted successfully!");
-  //       if (await user) loadListings("1");
-  //       setTimeout(() => setSuccess(""), 3000);
-  //     } else {
-  //       setError("Failed to delete listing");
-  //     }
-  //   }
-  // };
+  const handleDelete = async (id: string) => {
+    if (confirm("Are you sure you want to delete this listing?")) {
+      const result = deleteFoodListing(Number(id));
+      if (await result) {
+        setSuccess("Listing deleted successfully!");
+        if (await user) loadListings("1");
+        setTimeout(() => setSuccess(""), 3000);
+      } else {
+        setError("Failed to delete listing");
+      }
+    }
+  };
 
-  // const handleEditClick = (listing: FoodListing) => {
-  //   setEditingListing(listing);
-  //   const hoursRemaining = Math.round(
-  //     (new Date(listing.expiresAt).getTime() - Date.now()) / (1000 * 60 * 60)
-  //   );
-  //   setFormData({
-  //     title: listing.title,
-  //     description: listing.description,
-  //     location: listing.location,
-  //     address: listing.address,
-  //     hours: Math.max(1, hoursRemaining).toString(),
-  //   });
-  //   setError("");
-  // };
+  const handleEditClick = (listing: FoodListing) => {
+  setEditingListing(listing);
 
-  // const handleEditSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   setError("");
+  setFormData({
+  title: listing.title,
+  description: listing.description,
+  location: listing.location,
+  address: listing.address,
+  publishedAt: listing.publishedAt.slice(0, 16),
+  expiresAt: listing.expiresAt.slice(0, 16),
+});
 
-  //   if (!formData.title.trim()) {
-  //     setError("Please enter a title");
-  //     return;
-  //   }
-  //   if (!formData.description.trim()) {
-  //     setError("Please enter a description");
-  //     return;
-  //   }
-  //   if (!formData.location.trim()) {
-  //     setError("Please enter a location name");
-  //     return;
-  //   }
-  //   if (!formData.address.trim()) {
-  //     setError("Please enter an address");
-  //     return;
-  //   }
 
-  //   if (editingListing) {
-  //     const expiresAt = new Date(
-  //       Date.now() + Number.parseInt(formData.hours) * 60 * 60 * 1000
-  //     ).toISOString();
+  setError("");
+};
 
-  //     const result = editFoodListing(1, {
-  //       title: formData.title,
-  //       description: formData.description,
-  //       location: formData.location,
-  //       address: formData.address,
-  //       expiresAt,
-  //     });
+  const handleEditSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setError("");
 
-  //     if (await result) {
-  //       setSuccess("Listing updated successfully!");
-  //       setEditingListing(null);
-  //       if (await user) loadListings("1");
-  //       setTimeout(() => setSuccess(""), 3000);
-  //     } else {
-  //       setError("Failed to update listing");
-  //     }
-  //   }
-  // };
+  if (!editingListing) return;
 
-  // const getTimeRemaining = (expiresAt: string) => {
-  //   const now = new Date().getTime();
-  //   const expires = new Date(expiresAt).getTime();
-  //   const diff = expires - now;
+  if (!formData.title.trim() || !formData.description.trim()) {
+    setError("Title and description are required");
+    return;
+  }
 
-  //   if (diff <= 0) return "Expired";
+  const result = await editFoodListing(Number(editingListing.id), {
+  title: formData.title,
+  description: formData.description,
+  publishedAt: new Date(formData.publishedAt).toISOString(),
+  expiresAt: new Date(formData.expiresAt).toISOString(),
+  image: editingListing.image,
+});
 
-  //   const hours = Math.floor(diff / (1000 * 60 * 60));
-  //   const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
 
-  //   if (hours > 24) {
-  //     const days = Math.floor(hours / 24);
-  //     return `${days} day${days > 1 ? "s" : ""} left`;
-  //   }
-
-  //   if (hours > 0) {
-  //     return `${hours}h ${minutes}m left`;
-  //   }
-
-  //   return `${minutes}m left`;
-  // };
-  // if (!user) {
-  //   return null;
-  // }
+  if (result) {
+    setSuccess("Listing updated successfully!");
+    setEditingListing(null);
+    if (user) loadListings("1");
+    setTimeout(() => setSuccess(""), 3000);
+  } else {
+    setError("Failed to update listing");
+  }
+};
 
   return (
     <div className="min-h-screen bg-background">
@@ -213,14 +181,14 @@ export default function MyListingsPage() {
                         <Button
                           variant="outline"
                           size="icon"
-                          // onClick={() => handleEditClick(listing)}
+                          onClick={() => handleEditClick(listing)}
                         >
                           <Pencil className="h-4 w-4" />
                         </Button>
                         <Button
                           variant="outline"
                           size="icon"
-                          // onClick={() => handleDelete(listing.id)}
+                          onClick={() => handleDelete(listing.id)}
                         >
                           <Trash2 className="h-4 w-4 text-destructive" />
                         </Button>
@@ -231,12 +199,13 @@ export default function MyListingsPage() {
                     <div className="space-y-2 text-sm">
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <MapPin className="h-4 w-4" />
-                        <span>
-                          {listing.location} - {listing.address}
-                        </span>
+                        <span>{listing.address}</span>
                       </div>
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <Clock className="h-4 w-4" />
+                        <span>
+                          {formatDateDayMonthTime(listing.publishedAt)} - {formatDateDayMonthTime(listing.expiresAt)}
+                        </span>
                       </div>
                     </div>
                   </CardContent>
@@ -259,7 +228,7 @@ export default function MyListingsPage() {
             </DialogDescription>
           </DialogHeader>
 
-          <form >
+          <form onSubmit={handleEditSubmit}>
             {error && (
               <Alert variant="destructive" className="mb-4">
                 <AlertCircle className="h-4 w-4" />
@@ -292,40 +261,26 @@ export default function MyListingsPage() {
                   rows={3}
                 />
               </div>
-
               <div>
-                <Label htmlFor="edit-location">Location Name</Label>
+                <Label htmlFor="edit-publishedAt">Published At</Label>
                 <Input
-                  id="edit-location"
-                  value={formData.location}
+                  id="edit-publishedAt"
+                  type="datetime-local"
+                  value={formData.publishedAt}
                   onChange={(e) =>
-                    setFormData({ ...formData, location: e.target.value })
+                    setFormData({ ...formData, publishedAt: e.target.value })
                   }
-                  placeholder="e.g., Community Center"
                 />
               </div>
 
               <div>
-                <Label htmlFor="edit-address">Address</Label>
+                <Label htmlFor="edit-expiresAt">Expires At</Label>
                 <Input
-                  id="edit-address"
-                  value={formData.address}
+                  id="edit-expiresAt"
+                  type="datetime-local"
+                  value={formData.expiresAt}
                   onChange={(e) =>
-                    setFormData({ ...formData, address: e.target.value })
-                  }
-                  placeholder="e.g., 123 Main St"
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="edit-hours">Available for (hours)</Label>
-                <Input
-                  id="edit-hours"
-                  type="number"
-                  min="1"
-                  value={formData.hours}
-                  onChange={(e) =>
-                    setFormData({ ...formData, hours: e.target.value })
+                    setFormData({ ...formData, expiresAt: e.target.value })
                   }
                 />
               </div>

@@ -7,36 +7,46 @@ export type FoodListing = {
   location: string;
   address: string;
   expiresAt: string;
-  userId: number;
+  publishedAt: string;
+  shopId: number;
+  image?: string;
 };
 
-export async function getUserListings(userId: number) {
+export async function getUserListings(shopId: number) {
   const { data, error } = await supabaseClient
     .from("Item")
     .select("*")
-    .eq("shop_id", userId)
+    .eq("shop_id", shopId)
     .order("expires_at", { ascending: true });
-
-console.log("AAAAAAAAAAAAAAA");
 
   if (error) {
     console.error("getUserListings error:", error);
     return [];
   }
 
-  console.log(data);
+  const { data: shopData, error: shopError } = await supabaseClient
+    .from("Shop")
+    .select("location, address")
+    .eq("id", shopId)
+    .single();
+
+  if (shopError) {
+    console.error("GET SHOP ERROR:", shopError);
+    return [];
+  }
 
   return data.map((item) => ({
     id: item.id,
     title: item.title,
     description: item.description,
-    location: item.location,
-    address: item.address,
+    location: shopData.location,
+    address: shopData.address,
     expiresAt: item.expires_at,
-    userId: item.user_id,
+    publishedAt: item.published_at,
+    shopId: item.shop_id,
+    image: item.image,
   })) as FoodListing[];
 }
-
 
 export type CurrentUser = {
   id: number;
@@ -44,9 +54,7 @@ export type CurrentUser = {
   role_id: number;
 };
 
-export async function getCurrentUser() {
-  const userId = "1";
-
+export async function getCurrentUser(userId: string) {
   if (!userId) return null;
 
   const { data, error } = await supabaseClient
@@ -63,12 +71,8 @@ export async function getCurrentUser() {
   return data as CurrentUser;
 }
 
-
 export async function deleteFoodListing(itemId: number) {
-  const { error } = await supabaseClient
-    .from("Item")
-    .delete()
-    .eq("id", itemId);
+  const { error } = await supabaseClient.from("Item").delete().eq("id", itemId);
 
   if (error) {
     console.error("deleteFoodListing error:", error);
@@ -81,9 +85,9 @@ export async function deleteFoodListing(itemId: number) {
 type EditFoodListingInput = {
   title: string;
   description: string;
-  location: string;
-  address: string;
   expiresAt: string;
+  publishedAt: string;
+  image?: string;
 };
 
 export async function editFoodListing(
@@ -95,9 +99,9 @@ export async function editFoodListing(
     .update({
       title: data.title,
       description: data.description,
-      location: data.location,
-      address: data.address,
       expires_at: data.expiresAt,
+      published_at: data.publishedAt,
+      image: data.image,
     })
     .eq("id", itemId);
 
