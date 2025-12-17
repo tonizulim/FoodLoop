@@ -1,10 +1,11 @@
+import { LocationPoint } from "@/types/Location";
 import { supabaseClient } from "./supabase/server";
 
 export type FoodListing = {
   id: string;
   title: string;
   description: string;
-  location: string;
+  location: LocationPoint;
   address: string;
   expiresAt: string;
   publishedAt: string;

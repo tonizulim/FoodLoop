@@ -11,7 +11,7 @@ import {
   editFoodListing,
   type FoodListing,
   CurrentUser,
-} from "@/lib/auth";
+} from "@/lib/itemsActions";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -35,6 +35,11 @@ import {
 import { MapPin, Clock, Pencil, Trash2, AlertCircle } from "lucide-react";
 import formatDateDayMonthTime from "@/lib/helpers";
 
+interface LocationPoint {
+  lat: number;
+  lng: number;
+}
+
 export default function MyListingsPage() {
   const router = useRouter();
   const [user, setUser] = useState<CurrentUser | null>(null);
@@ -47,7 +52,7 @@ export default function MyListingsPage() {
     description: "",
     expiresAt: "",
     publishedAt: "",
-    location: "",
+    location: null as unknown as LocationPoint,
     address: "",
   });
   const [error, setError] = useState("");
@@ -166,7 +171,7 @@ export default function MyListingsPage() {
           ) : (
             <div className="space-y-4">
               {listings.map((listing) => (
-                <Card key={listing.id}>
+                <Card key={listing.id} onClick={() => router.push(`/item/${listing.id}`)}>
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div>
