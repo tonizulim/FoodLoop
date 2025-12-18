@@ -14,7 +14,9 @@ import { useItem } from "@/hooks/useItem";
 import Image from "next/image";
 import { Clock, Fullscreen, MapPin, User, Utensils } from "lucide-react";
 
-export default function ItemPage(id: number) {
+//export default function ItemPage(id: number) {
+export default function ItemPage() {
+  const id = 1;
   const { item, loading } = useItem(id);
 
   if (!item || loading) return <p>Loading or Item not found...</p>;
