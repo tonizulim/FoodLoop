@@ -11,9 +11,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useFoodCategory } from "@/hooks/useFoodCategory";
-import { Suspense } from "react";
-import AvailableFoodPickups from "@/components/AvailableFoodPickups";
-import AvailableFoodPickupsLoadingSkeleton from "@/components/AvailableFoodPickupsLoadingSkeleton";
+// import { Suspense } from "react";
+// import AvailableFoodPickups from "@/components/AvailableFoodPickups";
+// import AvailableFoodPickupsLoadingSkeleton from "@/components/AvailableFoodPickupsLoadingSkeleton";
 
 export default function HomePage() {
   const { foodCategory } = useFoodCategory();
@@ -36,7 +36,7 @@ export default function HomePage() {
   return (
     <div className="min-h-[calc(100vh-4rem)]">
       {/* Hero Section */}
-      <section className="bg-gradient-to-b from-primary/10 to-background border-b border-border">
+      <section className="bg-linear-to-b from-primary/10 to-background border-b border-border">
         <div className="container mx-auto px-4 py-16 md:py-24">
           <div className="max-w-3xl mx-auto text-center space-y-6">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-balance">
@@ -84,9 +84,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-      <Suspense fallback={<AvailableFoodPickupsLoadingSkeleton />}>
+      {/* <Suspense fallback={<AvailableFoodPickupsLoadingSkeleton />}>
         <AvailableFoodPickups />
-      </Suspense>
+      </Suspense> */}
     </div>
   );
 }
