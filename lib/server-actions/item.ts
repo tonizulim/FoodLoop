@@ -61,6 +61,36 @@ export async function getActiveItems() {
   return Result.ok(transformListings(allPosts));
 }
 
+export async function getItem(id: number) {
+  const now = new Date().toISOString();
+
+  const { data: item, error } = await supabaseClient
+    .from("Item")
+    .select(
+      `
+    *,
+    Food (
+      type
+    ),
+    Shop (
+      location,
+      User!Shop_admin_id_User_id_fk (email),address
+    )
+  `
+    )
+    .gt("expires_at", now)
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    console.error("Get error:", error);
+    await logError(error);
+    return Result.error("server error");
+  }
+
+  return Result.ok(transformListings([item])[0]);
+}
+
 export async function addItem(item: NewItem) {
   const parsedItem = itemSchema.safeParse(item);
 
