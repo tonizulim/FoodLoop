@@ -21,7 +21,7 @@ export default function MapPage() {
 
   return (
     <div className="relative w-full h-full flex flex-row gap-4 p-4">
-      <div className=" h-[90vh] flex-1 relative bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 rounded-lg border-2 border-green-200 dark:border-green-800 overflow-hidden">
+      <div className=" h-[90vh] flex-1 relative bg-linear-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20 rounded-lg border-2 border-green-200 dark:border-green-800 overflow-hidden">
         <Map
           listings={filteredListings}
           setSelectedLocation={setSelectedLocation}

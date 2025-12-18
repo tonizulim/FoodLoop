@@ -6,14 +6,14 @@ import { useEffect, useState } from "react";
 
 export function useItem(id: number) {
   const [loading, setLoading] = useState(false);
-  const [listing, setListing] = useState<Listing | null>();
+  const [item, setItem] = useState<Listing | null>();
 
   async function fetchListing() {
     setLoading(true);
     try {
       const res = await getItem(id);
       if (res.status) {
-        setListing(res?.data);
+        setItem(res?.data);
       }
       setLoading(false);
       return;
@@ -28,6 +28,6 @@ export function useItem(id: number) {
 
   return {
     loading,
-    listing,
+    item,
   };
 }
