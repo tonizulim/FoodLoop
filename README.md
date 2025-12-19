@@ -24,5 +24,7 @@
 - Link to Assignment 1: [**Assignment 1**](https://github.com/tonizulim/FoodLoop/blob/main/assignments/1_assignment.md)
 - Link to Assignment 2: [**Assignment 2**](https://github.com/tonizulim/FoodLoop/blob/main/assignments/2_assignment.md)
 - Link to Assignment 3: [**Assignment 3**](https://github.com/tonizulim/FoodLoop/blob/main/assignments/3_assignment.md)
+- Link to Assignment 4: [**Assignment 4**](https://github.com/tonizulim/FoodLoop/blob/main/assignments/4_assignment.md)
+- Link to Assignment 5: [**Assignment 5**](https://github.com/tonizulim/FoodLoop/blob/main/assignments/5_assignment.md)
 
 Live at: https://food-loop-tau.vercel.app/
