@@ -11,9 +11,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useFoodCategory } from "@/hooks/useFoodCategory";
-//import { Suspense } from "react";
-//import AvailableFoodPickups from "@/components/AvailableFoodPickups";
-//import AvailableFoodPickupsLoadingSkeleton from "@/components/AvailableFoodPickupsLoadingSkeleton";
+import { Suspense } from "react";
+import AvailableFoodPickups from "@/components/AvailableFoodPickups";
+import AvailableFoodPickupsLoadingSkeleton from "@/components/AvailableFoodPickupsLoadingSkeleton";
 
 export default function HomePage() {
   const { foodCategory } = useFoodCategory();
@@ -84,9 +84,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-      {/* <Suspense fallback={<AvailableFoodPickupsLoadingSkeleton />}>
+      <Suspense fallback={<AvailableFoodPickupsLoadingSkeleton />}>
         <AvailableFoodPickups />
-      </Suspense> */}
+      </Suspense>
     </div>
   );
 }
