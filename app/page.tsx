@@ -5,19 +5,9 @@ import { useQueryState, parseAsInteger, parseAsString } from "nuqs";
 import { Input } from "@/components/ui/input";
 
 export default function HomePage() {
-  const [filterFoodCategory, setFilterFoodCategory] = useQueryState(
-    "filterFoodCategory",
-    parseAsInteger.withDefault(0).withOptions({ shallow: false })
-  );
-
   const [searchQuery, setSearchQuery] = useQueryState(
     "query",
     parseAsString.withDefault("").withOptions({ shallow: false })
-  );
-
-  const [page, setPage] = useQueryState(
-    "page",
-    parseAsInteger.withDefault(0).withOptions({ shallow: false })
   );
 
   return (
