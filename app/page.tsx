@@ -1,6 +1,5 @@
 "use client";
 
-import { useFoodCategory } from "@/hooks/useFoodCategory";
 import { Suspense } from "react";
 import AvailableFoodPickups from "@/components/AvailableFoodPickups";
 import AvailableFoodPickupsLoadingSkeleton from "@/components/AvailableFoodPickupsLoadingSkeleton";
