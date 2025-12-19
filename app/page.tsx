@@ -1,28 +1,36 @@
 "use client";
 
+import { useFoodCategory } from "@/hooks/useFoodCategory";
 import { Suspense } from "react";
-import PageComp from "./pageComp";
-import MapLoadingSkeleton from "@/components/MapLoadingSkeleton";
-import { useQueryState, parseAsString } from "nuqs";
-import { Input } from "@/components/ui/input";
+import AvailableFoodPickups from "@/components/AvailableFoodPickups";
+import AvailableFoodPickupsLoadingSkeleton from "@/components/AvailableFoodPickupsLoadingSkeleton";
+import SearchBar from "@/components/SearchBar";
+import SearchBarLoadingSkeleton from "@/components/SearchBarLoadingSkeleton";
 
 export default function HomePage() {
-  const [searchQuery, setSearchQuery] = useQueryState(
-    "query",
-    parseAsString.withDefault("")
-  );
-
   return (
-    <div>
-      <Input
-        type="text"
-        placeholder="Search for food, location..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value || null)}
-        className="pl-10 h-12 text-base"
-      />
-      <Suspense fallback={<MapLoadingSkeleton />}>
-        <PageComp />
+    <div className="min-h-[calc(100vh-4rem)]">
+      {/* Hero Section */}
+      <section className="bg-linear-to-b from-primary/10 to-background border-b border-border">
+        <div className="container mx-auto px-4 py-16 md:py-24">
+          <div className="max-w-3xl mx-auto text-center space-y-6">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-balance">
+              Share Food, <span className="text-primary">Reduce Waste</span>
+            </h1>
+            <p className="text-lg md:text-xl text-muted-foreground text-pretty">
+              Connect with your community to share surplus food and help reduce
+              food waste. Browse available pickups or share your own.
+            </p>
+
+            {/* Search Bar */}
+            <Suspense fallback={<SearchBarLoadingSkeleton />}>
+              <SearchBar />
+            </Suspense>
+          </div>
+        </div>
+      </section>
+      <Suspense fallback={<AvailableFoodPickupsLoadingSkeleton />}>
+        <AvailableFoodPickups />
       </Suspense>
     </div>
   );
