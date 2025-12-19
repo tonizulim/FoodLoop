@@ -17,7 +17,7 @@ export function FoodCard({ item }: FoodCardProps) {
   const hoursLeft = Math.floor(timeLeft / (1000 * 60 * 60));
 
   return (
-    <Link href={`/item/${item.id}`}>
+    <Link href={`/item/${item.id}`} className="m-2">
       <Card
         className="
     transition-all
