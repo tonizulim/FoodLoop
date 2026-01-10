@@ -13,6 +13,6 @@ export async function middleware(req: any) {
 }
 
 export const config = {
-  matcher: ["/add-food/:path*"],
+  matcher: ["/add-food/:path*", "/my-listings/:path*"],
   runtime: "nodejs",
 };
