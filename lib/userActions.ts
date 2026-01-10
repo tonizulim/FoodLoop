@@ -3,7 +3,7 @@ import { supabaseClient } from "./supabase/server";
 
 export async function getUserListings(shopId: number) {
   const { data, error } = await supabaseClient
-    .from("Item")
+    .from("item")
     .select("*")
     .eq("shop_id", shopId)
     .order("expires_at", { ascending: true });
