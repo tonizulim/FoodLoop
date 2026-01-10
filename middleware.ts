@@ -1,11 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
-export async function middleware(req: any) {
-  const hasSessionCookie = req.cookies.has("my-app.session_token");
+export function middleware(req: NextRequest) {
+  const token = req.cookies.get("my-app.session_token")?.value;
 
-  console.log("Cookie: ", req.cookies.get("my-app.session_token"));
-
-  if (!hasSessionCookie && req.nextUrl.pathname.startsWith("/add-food")) {
+  if (!token && req.nextUrl.pathname.startsWith("/add-food")) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
@@ -14,5 +12,4 @@ export async function middleware(req: any) {
 
 export const config = {
   matcher: ["/add-food/:path*", "/my-listings/:path*"],
-  runtime: "nodejs",
 };
