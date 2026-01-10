@@ -20,6 +20,7 @@ import { login } from "@/lib/server-actions/login";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { loginSchema, formatZodError } from "@/lib/zodHelpers";
 import { ZodError } from "zod";
+import { authClient } from "@/lib/auth-client";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -29,36 +30,46 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-    setLoading(true);
+  e.preventDefault();
+  setError("");
+  setLoading(true);
 
-    try {
-      loginSchema.parse({
-        email,
-        password,
-      });
-    } catch (err) {
-      if (err instanceof ZodError) {
-        const formatted = formatZodError(err);
-        setError(formatted.email || formatted.password || "Invalid input");
-      }
-      setLoading(false);
-      return;
+  try {
+    loginSchema.parse({ email, password });
+  } catch (err) {
+    if (err instanceof ZodError) {
+      const formatted = formatZodError(err);
+      setError(formatted.email || formatted.password || "Invalid input");
     }
+    setLoading(false);
+    return;
+  }
 
-    const result = await login(email, password);
+  try {
+    const { data, error: authError } = await authClient.signIn.email({
+      email,
+      password,
+      callbackURL: "/", 
+    }, {
+      onRequest: () => setLoading(true),
+      onSuccess: () => {
+        router.push("/");
+      },
+      onError: (ctx) => {
+        setError(ctx.error?.message || "Login failed");
+        setLoading(false);
+      },
+    });
 
-    if (!result.success) {
-      setError(
-          "Login failed"
-      );
+    if (authError) {
+      setError(authError.message?.toString() || "Login failed");
       setLoading(false);
-      return;
     }
-
-    router.push("/");
-  };
+  } catch (err) {
+    setError("Unexpected error during login");
+    setLoading(false);
+  }
+};
 
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4 bg-secondary/30">
