@@ -27,29 +27,41 @@ export function transformListings(raw: any[]): Listing[] {
     expires_at: item.expires_at,
 
     foodCategory: item.Food?.type ?? "",
-    location: parsePoint(item.Shop?.location) ?? { lng: 0, lat: 0 },
-    address: item.Shop?.address ?? "",
-    email: item.Shop?.User?.email ?? "",
+    location: parsePoint(item.shop?.location) ?? { lat: 0, lng: 0 },
+    address: item.shop?.address ?? "",
+    email: item.shop?.user?.email ?? "",
   }));
 }
+
 
 export async function getActiveItems() {
   const now = new Date().toISOString();
 
-  const { data: allPosts, error } = await supabaseClient
-    .from("Item")
-    .select(
-      `
-    *,
-    Food (
-      type
-    ),
-    Shop (
-      location,
-      User!Shop_admin_id_User_id_fk (email),address
-    )
-  `
-    )
+  const { data, error } = await supabaseClient
+    .from("item")
+    .select(`
+      id,
+      shop_id,
+      food_id,
+      title,
+      description,
+      image,
+      published_at,
+      expires_at,
+
+      Food (
+        type
+      ),
+
+      shop:shop_id (
+        location,
+        address,
+
+        user:admin_id (
+          email
+        )
+      )
+    `)
     .gt("expires_at", now);
 
   if (error) {
@@ -58,28 +70,40 @@ export async function getActiveItems() {
     return Result.error("server error");
   }
 
-  return Result.ok(transformListings(allPosts));
+  return Result.ok(transformListings(data ?? []));
 }
+
 
 export async function getItem(id: number) {
   const now = new Date().toISOString();
 
-  const { data: item, error } = await supabaseClient
-    .from("Item")
-    .select(
-      `
-    *,
-    Food (
-      type
-    ),
-    Shop (
-      location,
-      User!Shop_admin_id_User_id_fk (email),address
-    )
-  `
-    )
-    .gt("expires_at", now)
+  const { data, error } = await supabaseClient
+    .from("item")
+    .select(`
+      id,
+      shop_id,
+      food_id,
+      title,
+      description,
+      image,
+      published_at,
+      expires_at,
+
+      Food (
+        type
+      ),
+
+      shop:shop_id (
+        location,
+        address,
+
+        user:admin_id (
+          email
+        )
+      )
+    `)
     .eq("id", id)
+    .gt("expires_at", now)
     .single();
 
   if (error) {
@@ -88,8 +112,9 @@ export async function getItem(id: number) {
     return Result.error("server error");
   }
 
-  return Result.ok(transformListings([item])[0]);
+  return Result.ok(transformListings([data])[0]);
 }
+
 
 export async function addItem(item: NewItem) {
   const parsedItem = itemSchema.safeParse(item);
@@ -99,7 +124,7 @@ export async function addItem(item: NewItem) {
   }
 
   const { data, error } = await supabaseClient
-    .from("Item")
+    .from("item")
     .insert([parsedItem.data]);
 
   if (error) {

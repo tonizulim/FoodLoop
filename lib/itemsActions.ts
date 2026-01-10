@@ -1,115 +1,83 @@
-import { LocationPoint } from "@/types/Location";
-import { supabaseClient } from "./supabase/server";
+"use server";
 
-export type FoodListing = {
-  id: string;
-  title: string;
-  description: string;
-  location: LocationPoint;
-  address: string;
-  expiresAt: string;
-  publishedAt: string;
-  shopId: number;
-  image?: string;
-};
+import { db } from "@/db";
+import { Item, Shop } from "@/db/schema";
+import { eq } from "drizzle-orm";
+import { getServerSession } from "@/lib/auth-server";
 
-export async function getUserListings(shopId: number) {
-  const { data, error } = await supabaseClient
-    .from("Item")
-    .select("*")
-    .eq("shop_id", shopId)
-    .order("expires_at", { ascending: true });
+export async function getUserListings() {
+  const session = await getServerSession();
+  if (!session) throw new Error("Unauthorized");
 
-  if (error) {
-    console.error("getUserListings error:", error);
-    return [];
-  }
-
-  const { data: shopData, error: shopError } = await supabaseClient
-    .from("Shop")
-    .select("location, address")
-    .eq("id", shopId)
-    .single();
-
-  if (shopError) {
-    console.error("GET SHOP ERROR:", shopError);
-    return [];
-  }
-
-  return data.map((item) => ({
-    id: item.id,
-    title: item.title,
-    description: item.description,
-    location: shopData.location,
-    address: shopData.address,
-    expiresAt: item.expires_at,
-    publishedAt: item.published_at,
-    shopId: item.shop_id,
-    image: item.image,
-  })) as FoodListing[];
-}
-
-export type CurrentUser = {
-  id: number;
-  email: string;
-  role_id: number;
-};
-
-export async function getCurrentUser(userId: string) {
-  if (!userId) return null;
-
-  const { data, error } = await supabaseClient
-    .from("User")
-    .select("id, email, role_id")
-    .eq("id", userId)
-    .single();
-
-  if (error || !data) {
-    console.error("getCurrentUser error:", error);
-    return null;
-  }
-
-  return data as CurrentUser;
+  return db
+    .select({
+      id: Item.id,
+      title: Item.title,
+      description: Item.description,
+      image: Item.image,
+      publishedAt: Item.published_at,
+      expiresAt: Item.expires_at,
+      address: Shop.address,
+      location: Shop.location,
+    })
+    .from(Item)
+    .innerJoin(Shop, eq(Item.shop_id, Shop.id))
+    .where(eq(Shop.admin_id, session.user.id));
 }
 
 export async function deleteFoodListing(itemId: number) {
-  const { error } = await supabaseClient.from("Item").delete().eq("id", itemId);
+  const session = await getServerSession();
+  if (!session) throw new Error("Unauthorized");
 
-  if (error) {
-    console.error("deleteFoodListing error:", error);
-    return false;
+  const listing = await db
+    .select()
+    .from(Item)
+    .innerJoin(Shop, eq(Item.shop_id, Shop.id))
+    .where(eq(Item.id, itemId))
+    .limit(1);
+
+  if (!listing.length || listing[0].shop.admin_id !== session.user.id) {
+    throw new Error("Forbidden");
   }
 
+  await db.delete(Item).where(eq(Item.id, itemId));
   return true;
 }
 
-type EditFoodListingInput = {
-  title: string;
-  description: string;
-  expiresAt: string;
-  publishedAt: string;
-  image?: string;
-};
-
 export async function editFoodListing(
   itemId: number,
-  data: EditFoodListingInput
+  data: {
+    title: string;
+    description: string;
+    publishedAt: string;
+    expiresAt: string;
+    image?: string | null;
+  }
 ) {
-  const { error } = await supabaseClient
-    .from("Item")
-    .update({
+  const session = await getServerSession();
+  if (!session) throw new Error("Unauthorized");
+
+  const listing = await db
+    .select()
+    .from(Item)
+    .innerJoin(Shop, eq(Item.shop_id, Shop.id))
+    .where(eq(Item.id, itemId))
+    .limit(1);
+
+  if (!listing.length || listing[0].shop.admin_id !== session.user.id) {
+    throw new Error("Forbidden");
+  }
+
+  await db
+    .update(Item)
+    .set({
       title: data.title,
       description: data.description,
-      expires_at: data.expiresAt,
-      published_at: data.publishedAt,
-      image: data.image,
+      published_at: new Date(data.publishedAt),
+      expires_at: new Date(data.expiresAt),
+      image: data.image ?? listing[0].item.image,
     })
-    .eq("id", itemId);
-
-  if (error) {
-    console.error("editFoodListing error:", error);
-    return false;
-  }
+    .where(eq(Item.id, itemId));
 
   return true;
 }

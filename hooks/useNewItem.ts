@@ -1,71 +1,33 @@
 "use client";
 
-import { addItem } from "@/lib/server-actions/item";
-import { ItemFormState } from "@/types/States";
-import { NewItem } from "@/types/NewItemDTO";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { createFoodItem } from "@/lib/itemsServer"; // server action
 
 export function useFoodForm() {
-  const router = useRouter();
-  const [foodFormState, setFoodFormState] = useState<ItemFormState>({
-    error: "",
-    success: false,
-    loading: false,
-    fieldErrors: {},
-  });
-  const [item, setItem] = useState<NewItem>({
-    shop_id: 1,
-    food_id: 1,
+  const [item, setItem] = useState({
     title: "",
     description: "",
-    image: undefined,
-    published_at: new Date(Date.now()).toISOString(),
-    expires_at: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(),
+    food_id: undefined as number | undefined,
+    expires_at: new Date(Date.now() + 2 * 3600_000).toISOString(),
   });
 
-  useEffect(() => {
-    if (foodFormState.success) router.push("./");
-  }, [foodFormState.success]);
+  const [foodFormState, setFoodFormState] = useState({
+    loading: false,
+    error: "",
+    success: false,
+  });
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    setFoodFormState((prev) => ({
-      ...prev,
-      error: "",
-      fieldErrors: {},
-      success: false,
-      loading: true,
-    }));
+    setFoodFormState({ loading: true, error: "", success: false });
 
     try {
-      const res = await addItem(item);
-
-      if (res?.status) {
-        setFoodFormState((prev) => ({
-          ...prev,
-          success: true,
-          loading: false,
-        }));
-        return;
-      } else {
-        setFoodFormState((prev) => ({
-          ...prev,
-          error: res?.message ? res?.message : "",
-          fieldErrors: res?.error ? res?.error : {},
-          success: false,
-          loading: false,
-        }));
-      }
-    } catch (err) {
-      setFoodFormState((prev) => ({
-        ...prev,
-        error: "Failed to post food listing",
-        loading: false,
-      }));
+      await createFoodItem(item);
+      setFoodFormState({ loading: false, error: "", success: true });
+    } catch (err: any) {
+      setFoodFormState({ loading: false, error: err.message || "Failed", success: false });
     }
-    return;
-  };
+  }
 
   return { item, setItem, handleSubmit, foodFormState };
 }
