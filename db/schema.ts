@@ -9,6 +9,8 @@ import {
   text,
 } from "drizzle-orm/pg-core";
 
+export * from "@/auth-schema";
+
 export const Role = pgTable("Role", {
   id: integer().primaryKey().generatedAlwaysAsIdentity(),
   role: varchar({ length: 50 }).notNull(),
