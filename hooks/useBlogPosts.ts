@@ -7,7 +7,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export function useBlogPosts() {
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
 
   const [loading, setLoading] = useState(false);
   const [blogs, setBlogs] = useState<Blog[]>([]);
