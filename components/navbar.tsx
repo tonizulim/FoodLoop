@@ -4,7 +4,16 @@ import { useSession, signOut } from "../lib/auth-client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { MapPin, Home, Map, Plus, List, Menu, X } from "lucide-react";
+import {
+  MapPin,
+  Home,
+  Map,
+  Plus,
+  List,
+  Menu,
+  X,
+  Newspaper,
+} from "lucide-react";
 import { useState, useEffect } from "react";
 
 export function Navbar() {
@@ -18,6 +27,7 @@ export function Navbar() {
   const baseLinks = [
     { href: "/", label: "Home", icon: Home },
     { href: "/map", label: "Map", icon: Map },
+    { href: "/blog", label: "Blog", icon: Newspaper },
   ];
 
   const userLinks = [
