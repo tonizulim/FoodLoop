@@ -14,7 +14,7 @@ import { Shield, UserCheck, UserX } from "lucide-react";
 
 import {
   approveUser,
-  makeAdmin,
+  deleteUser,
   type User,
 } from "@/lib/adminActions";
 
@@ -81,7 +81,7 @@ export default function AdminClient({ users }: { users: User[] }) {
                       size="sm"
                       className="gap-2"
                       onClick={async () => {
-                        await approveUser("3");
+                        await approveUser(user.id);
                         reload();
                       }}
                     >
@@ -96,12 +96,12 @@ export default function AdminClient({ users }: { users: User[] }) {
                       variant="outline"
                       className="gap-2"
                       onClick={async () => {
-                        await makeAdmin(user.id);
+                        await deleteUser(user.id);
                         reload();
                       }}
                     >
                       <Shield className="h-4 w-4" />
-                      Make admin
+                      Decline
                     </Button>
                   )}
                 </div>

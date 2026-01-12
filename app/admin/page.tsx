@@ -1,10 +1,10 @@
 import { redirect } from "next/navigation";
-import { requireAdmin } from "@/lib/adminGuard";
 import { getAllUsers } from "@/lib/adminActions";
 import AdminClient from "@/app/admin/AdminClient";
+import { isAdmin } from "@/lib/middleware/isAdmin";
 
 export default async function AdminPage() {
-  const admin = await requireAdmin();
+  const admin = await isAdmin();
 
   if (!admin) {
     redirect("/");
