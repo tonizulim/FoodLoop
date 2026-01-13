@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { getAllUsers } from "@/lib/adminActions";
+import { getAllUsers } from "@/lib/server-actions/user";
 import AdminClient from "@/app/admin/AdminClient";
 import { isAdmin } from "@/lib/middleware/isAdmin";
 

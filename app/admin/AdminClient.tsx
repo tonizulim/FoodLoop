@@ -16,7 +16,7 @@ import {
   approveUser,
   deleteUser,
   type User,
-} from "@/lib/adminActions";
+} from "@/lib/server-actions/user";
 
 export default function AdminClient({ users }: { users: User[] }) {
   const [data] = useState(users);
