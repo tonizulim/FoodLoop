@@ -1,11 +1,9 @@
-import { signOut } from "better-auth/api";
 import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(req: NextRequest) {
-  const token = req.cookies.get("my-app.session_token")?.value;
+  const token = req.cookies.get("__Secure-my-app.session_token")?.value;
 
   if (!token) {
-    signOut();
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
