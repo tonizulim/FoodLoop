@@ -49,8 +49,6 @@ export default function SuperAdminClient({ currentUser, users }: Props) {
   const [success, setSuccess] = useState("");
   const [error, setError] = useState("");
 
-  console.log("Current User:", currentUser);
-
   useEffect(() => {
     setLoading(false);
   }, []);
