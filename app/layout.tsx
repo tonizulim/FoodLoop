@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/navbar";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { isAdmin } from "@/lib/middleware/isAdmin";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,17 +26,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const isAdminUser = await isAdmin();
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Navbar></Navbar>
+        <Navbar isAdmin={isAdminUser}></Navbar>
         <NuqsAdapter>{children}</NuqsAdapter>
       </body>
     </html>

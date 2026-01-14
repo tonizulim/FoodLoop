@@ -18,7 +18,11 @@ import {
 } from "lucide-react";
 import { useState, useEffect } from "react";
 
-export function Navbar() {
+interface NavbarProps {
+  isAdmin?: boolean;
+}
+
+export function Navbar({ isAdmin }: NavbarProps) {
   const router = useRouter();
   const pathname = usePathname();
   const { data } = useSession();
@@ -34,8 +38,6 @@ export function Navbar() {
     { href: "/map", label: "Map", icon: Map },
     { href: "/blog", label: "Blog", icon: Newspaper },
   ];
-
-  const isAdmin = false; // Replace with actual admin check logic
 
   const userLinks = [
     { href: "/add-food", label: "Share Food", icon: Plus },
