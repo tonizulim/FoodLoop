@@ -22,10 +22,15 @@ export function useFoodForm() {
     setFoodFormState({ loading: true, error: "", success: false });
 
     try {
-      await createFoodItem(item);
+      await createFoodItem({ ...item, food_id: item.food_id ?? -1 });
+
       setFoodFormState({ loading: false, error: "", success: true });
     } catch (err: any) {
-      setFoodFormState({ loading: false, error: err.message || "Failed", success: false });
+      setFoodFormState({
+        loading: false,
+        error: err.message || "Failed",
+        success: false,
+      });
     }
   }
 

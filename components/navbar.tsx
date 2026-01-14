@@ -4,7 +4,17 @@ import { useSession, signOut, authClient } from "../lib/auth-client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { MapPin, Home, Map, Plus, List, Menu, X, Shield } from "lucide-react";
+import {
+  MapPin,
+  Home,
+  Map,
+  Plus,
+  List,
+  Menu,
+  X,
+  Newspaper,
+  Shield
+} from "lucide-react";
 import { useState, useEffect } from "react";
 import { ROLE_ADMIN, ROLE_SUPER_ADMIN } from "@/types/roles";
 
@@ -19,6 +29,7 @@ export function Navbar() {
   const baseLinks = [
     { href: "/", label: "Home", icon: Home },
     { href: "/map", label: "Map", icon: Map },
+    { href: "/blog", label: "Blog", icon: Newspaper },
   ];
 
   const isAdmin = true; // Replace with actual admin check based on session user role
