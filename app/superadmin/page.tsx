@@ -12,6 +12,5 @@ export default async function SuperAdminPage() {
 
     const users = await getAllUsers();
 
-
   return <SuperAdminClient currentUser={user} users={users} />;
 }

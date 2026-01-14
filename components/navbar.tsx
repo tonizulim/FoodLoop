@@ -1,6 +1,7 @@
 "use client";
 
 import { useSession, signOut } from "../lib/auth-client";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,7 @@ import {
 import { useState, useEffect } from "react";
 
 export function Navbar() {
+  const router = useRouter();
   const pathname = usePathname();
   const { data } = useSession();
   const session = data?.session;
@@ -33,7 +35,7 @@ export function Navbar() {
     { href: "/blog", label: "Blog", icon: Newspaper },
   ];
 
-  const isAdmin = true;
+  const isAdmin = false; // Replace with actual admin check logic
 
   const userLinks = [
     { href: "/add-food", label: "Share Food", icon: Plus },
@@ -78,7 +80,7 @@ export function Navbar() {
 
           <div className="hidden md:flex items-center gap-2">
             {session ? (
-              <Button onClick={() => signOut()} variant="outline" size="sm">
+              <Button onClick={() => {signOut(); router.push("/login");}} variant="outline" size="sm">
                 Logout
               </Button>
             ) : (
@@ -126,7 +128,7 @@ export function Navbar() {
             <div className="pt-2 border-t border-border space-y-2">
               {session ? (
                 <Button
-                  onClick={() => signOut()}
+                  onClick={() => {signOut(); router.push("/login");}}
                   variant="outline"
                   size="sm"
                   className="w-full"

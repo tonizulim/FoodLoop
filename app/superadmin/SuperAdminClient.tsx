@@ -53,56 +53,6 @@ export default function SuperAdminClient({ currentUser, users }: Props) {
     setLoading(false);
   }, []);
 
-  const handleReject = async (userId: number) => {
-    try {
-      const res = await fetch(`/api/admin/users/${userId}/reject`, {
-        method: "POST",
-      });
-      if (!res.ok) throw new Error();
-      setSuccess("User approval revoked");
-      //loadUsers();
-      setTimeout(() => setSuccess(""), 3000);
-    } catch {
-      setError("Failed to revoke approval");
-    }
-  };
-
-  const handlePromoteToAdmin = async (userId: number) => {
-    if (!confirm("Promote this user to admin?")) return;
-
-    try {
-      const res = await fetch(`/api/admin/users/${userId}/promote`, {
-        method: "POST",
-      });
-      if (!res.ok) throw new Error();
-      setSuccess("User promoted to admin");
-      //loadUsers();
-      setTimeout(() => setSuccess(""), 3000);
-    } catch {
-      setError("Failed to promote user");
-    }
-  };
-
-  const handleDeleteUser = async (userId: number) => {
-    if (userId === currentUser.id) {
-      setError("You cannot delete your own account");
-      return;
-    }
-
-    if (!confirm("Delete this user and all their listings?")) return;
-
-    try {
-      const res = await fetch(`/api/admin/users/${userId}`, {
-        method: "DELETE",
-      });
-      if (!res.ok) throw new Error();
-      setSuccess("User deleted successfully");
-      //loadUsers();
-      setTimeout(() => setSuccess(""), 3000);
-    } catch {
-      setError("Failed to delete user");
-    }
-  };
 
   if (loading) return null;
 
