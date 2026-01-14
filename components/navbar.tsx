@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession, signOut } from "../lib/auth-client";
+import { useSession, signOut, authClient } from "../lib/auth-client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -13,8 +13,10 @@ import {
   Menu,
   X,
   Newspaper,
+  Shield
 } from "lucide-react";
 import { useState, useEffect } from "react";
+import { ROLE_ADMIN, ROLE_SUPER_ADMIN } from "@/types/roles";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -30,14 +32,21 @@ export function Navbar() {
     { href: "/blog", label: "Blog", icon: Newspaper },
   ];
 
+  const isAdmin = true; // Replace with actual admin check based on session user role
+
   const userLinks = [
     { href: "/add-food", label: "Share Food", icon: Plus },
     { href: "/my-listings", label: "My Listings", icon: List },
   ];
 
-  // ako nema sesije, userLinks se neće prikazivati
-  const navLinks = [...baseLinks, ...(session ? userLinks : [])];
-  console.log("Session in Navbar: ", session);
+  const adminLinks = [
+    { href: "/admin/users", label: "My Users", icon: Shield },
+  ];
+
+  const navLinks = [
+    ...baseLinks,
+    ...(session ? (isAdmin ? adminLinks : userLinks) : []),
+  ];
 
   return (
     <nav className="border-b border-border bg-card">
@@ -87,7 +96,6 @@ export function Navbar() {
           </div>
         </div>
 
-        {/* Mobile menu */}
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-border py-4 space-y-2">
             {navLinks.map(({ href, label, icon: Icon }) => (
