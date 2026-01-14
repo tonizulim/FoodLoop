@@ -41,7 +41,7 @@ export function Navbar() {
   ];
 
   const adminLinks = [
-    { href: "/admin/users", label: "My Users", icon: Shield },
+    { href: "/admin", label: "My Users", icon: Shield },
   ];
 
   const navLinks = [
