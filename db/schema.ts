@@ -47,12 +47,3 @@ export const Item = pgTable("item", {
   published_at: timestamp().defaultNow().notNull(),
   expires_at: timestamp().notNull(),
 });
-
-export const Log = pgTable("Log", {
-  id: integer().primaryKey().generatedAlwaysAsIdentity(),
-  code: varchar({ length: 50 }),
-  message: varchar({ length: 255 }).notNull(),
-  details: text(),
-  hint: text(),
-  time: timestamp().defaultNow(),
-});
