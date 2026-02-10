@@ -17,6 +17,7 @@ import {
   Shield,
 } from "lucide-react";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 
 interface NavbarProps {
   isAdmin?: boolean;
@@ -44,9 +45,7 @@ export function Navbar({ isAdmin }: NavbarProps) {
     { href: "/my-listings", label: "My Listings", icon: List },
   ];
 
-  const adminLinks = [
-    { href: "/admin", label: "My Users", icon: Shield },
-  ];
+  const adminLinks = [{ href: "/admin", label: "My Users", icon: Shield }];
 
   const navLinks = [
     ...baseLinks,
@@ -61,7 +60,13 @@ export function Navbar({ isAdmin }: NavbarProps) {
             href="/"
             className="flex items-center gap-2 font-semibold text-lg"
           >
-            <MapPin className="h-6 w-6 text-primary" />
+            <Image
+              src="/logo.svg" // your logo in /public/logo.svg
+              alt="FoodShare Logo"
+              width={32} // adjust width
+              height={32} // adjust height
+              className="object-contain"
+            />
             <span>FoodShare</span>
           </Link>
 
@@ -71,9 +76,9 @@ export function Navbar({ isAdmin }: NavbarProps) {
                 <Button
                   variant={pathname === href ? "secondary" : "ghost"}
                   size="sm"
-                  className="gap-2"
+                  className="gap-2 hover:bg-muted"
                 >
-                  <Icon className="h-4 w-4" />
+                  {/* <Icon className="h-4 w-4" /> */}
                   {label}
                 </Button>
               </Link>
@@ -82,7 +87,14 @@ export function Navbar({ isAdmin }: NavbarProps) {
 
           <div className="hidden md:flex items-center gap-2">
             {session ? (
-              <Button onClick={() => {signOut(); router.push("/login");}} variant="outline" size="sm">
+              <Button
+                onClick={() => {
+                  signOut();
+                  router.push("/login");
+                }}
+                variant="outline"
+                size="sm"
+              >
                 Logout
               </Button>
             ) : (
@@ -130,7 +142,10 @@ export function Navbar({ isAdmin }: NavbarProps) {
             <div className="pt-2 border-t border-border space-y-2">
               {session ? (
                 <Button
-                  onClick={() => {signOut(); router.push("/login");}}
+                  onClick={() => {
+                    signOut();
+                    router.push("/login");
+                  }}
                   variant="outline"
                   size="sm"
                   className="w-full"
