@@ -17,9 +17,9 @@ export async function getAllUsers() {
   const data = await db.select().from(AppUser);
   return (
     data?.map((u) => ({
-      id: u.id as number,
+      id: u.id.toString(),
       email: u.email,
-      name: u.name,
+      name: u.name ?? undefined,
       isAdmin: u.isAdmin,
       adminId: u.authUserId,
     })) ?? []
