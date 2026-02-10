@@ -177,7 +177,7 @@ export default function NotFound() {
   }, [missed, gameStarted]);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-background overflow-hidden select-none">
+    <div className="h-9/12 md:min-h-screen flex flex-col items-center justify-center bg-background overflow-hidden select-none">
       {/* Score display */}
       {gameStarted && !gameOver && (
         <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 flex items-center gap-6">
@@ -193,7 +193,7 @@ export default function NotFound() {
       {/* Game canvas */}
       <div
         ref={canvasRef}
-        className="relative w-full max-w-2xl aspect-[3/4] md:aspect-[4/3] mx-auto overflow-hidden rounded-2xl border-2 border-border bg-secondary/30"
+        className="relative w-full max-w-2xl aspect-[3/4] md:aspect-[4/3] mx-auto mt-25 overflow-hidden rounded-2xl border-2 border-border bg-secondary/30"
         style={{ cursor: gameStarted && !gameOver ? "none" : "default" }}
       >
         {/* Background 404 */}
