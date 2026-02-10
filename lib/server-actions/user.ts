@@ -26,9 +26,16 @@ export async function getAllUsers() {
   );
 }
 
-export async function deleteUser(userId: string) {
-  await db.delete(AppUser).where(eq(AppUser.authUserId, userId));
-  supabaseAdmin.auth.admin.deleteUser(userId);
+export async function deleteUser(adminId: string) {
+  const user = await db
+    .select()
+    .from(AppUser)
+    .where(eq(AppUser.authUserId, adminId));
+
+  if (!user[0]) throw new Error("User not found");
+  await db.delete(AppUser).where(eq(AppUser.authUserId, adminId));
+
+  await db.delete(AppUser).where(eq(AppUser.authUserId, adminId));
 }
 
 export async function getUser(userId: string) {

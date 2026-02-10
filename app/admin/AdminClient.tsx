@@ -54,7 +54,7 @@ export default function AdminClient({ users }: { users: User[] }) {
                     variant="outline"
                     className="gap-2"
                     onClick={async () => {
-                      await deleteUser(user.id);
+                      await deleteUser(user.adminId);
                       reload();
                     }}
                   >
