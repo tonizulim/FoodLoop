@@ -1,23 +1,21 @@
 "use client";
 
-import { getBlogs } from "@/lib/server-actions/blog";
+import { getBlogById, getBlogs } from "@/lib/server-actions/blog";
 import { Blog } from "@/types/Blog";
-import { Listing } from "@/types/Listing";
-import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-export function useBlogPosts() {
+export function useBlogPostById(id: string) {
   // const searchParams = useSearchParams();
 
   const [loading, setLoading] = useState(false);
-  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [blog, setBlog] = useState<Blog | null>();
 
-  async function fetchBlogs() {
+  async function fetchBlog() {
     setLoading(true);
     try {
-      const res = await getBlogs();
+      const res = await getBlogById(id);
       if (res) {
-        setBlogs(res || []);
+        setBlog(res || null);
       }
       setLoading(false);
       return;
@@ -27,11 +25,11 @@ export function useBlogPosts() {
   }
 
   useEffect(() => {
-    fetchBlogs();
+    fetchBlog();
   }, []);
 
   return {
     loading,
-    blogs,
+    blog,
   };
 }
