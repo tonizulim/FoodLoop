@@ -1,90 +1,122 @@
 "use server";
 
-import { headers } from "next/headers";
-import { auth } from "@/lib/auth";
 import { db } from "@/db";
-import { AppUser } from "@/db/schema";
+import { AppUser, Shop } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import { ROLE_ADMIN, ROLE_SUPER_ADMIN } from "@/types/roles";
-import { supabaseClient } from "../supabase/server";
+import { InferSelectModel } from "drizzle-orm";
+import { supabaseAdmin, supabaseClient } from "../supabase/server";
 
-export async function getRoleUser() {
-  const h = await headers();
+// export type User = {
+//   id: string;
+//   email: string;
+//   name?: string;
+//   isAdmin: boolean;
+// };
 
-  const session = await auth.api.getSession({
-    headers: Object.fromEntries(h.entries()),
-  });
+export async function getAllUsers() {
+  const data = await db.select().from(AppUser);
+  return (
+    data?.map((u) => ({
+      id: u.id.toString(),
+      email: u.email,
+      name: u.name ?? undefined,
+      isAdmin: u.isAdmin,
+      adminId: u.authUserId,
+    })) ?? []
+  );
+}
 
-  if (!session) return null;
-
-  const [user] = await db
-    .select({
-      id: AppUser.id,
-      email: AppUser.email,
-      role_id: AppUser.role_id,
-      approved: AppUser.approved,
-    })
+export async function deleteUser(adminId: string) {
+  const user = await db
+    .select()
     .from(AppUser)
-    .where(eq(AppUser.authUserId, session.user.id));
+    .where(eq(AppUser.authUserId, adminId));
 
-  if (!user) return null;
+  if (!user[0]) throw new Error("User not found");
+  await db.delete(AppUser).where(eq(AppUser.authUserId, adminId));
+
+  await db.delete(AppUser).where(eq(AppUser.authUserId, adminId));
+}
+
+export async function getUser(userId: string) {
+  const [user, shop] = await Promise.all([
+    db.select().from(AppUser).where(eq(AppUser.authUserId, userId)),
+    db.select().from(Shop).where(eq(Shop.admin_id, userId)),
+  ]);
+
+  if (!user[0]) return null;
 
   return {
-    id: user.id,
-    email: user.email,
-    role_id: user.role_id,
-    approved: user.approved,
-    isAdmin:
-      user.role_id === ROLE_ADMIN ||
-      user.role_id === ROLE_SUPER_ADMIN,
-    isSuperAdmin: user.role_id === ROLE_SUPER_ADMIN,
+    id: user[0].id as number,
+    name: user[0].name,
+    email: user[0].email,
+    adminId: user[0].authUserId,
+    shop: shop[0]
+      ? {
+          name: shop[0].name,
+          address: shop[0].address,
+          location: shop[0].location,
+        }
+      : undefined,
   };
 }
 
 export type User = {
   id: string;
   email: string;
-  approved: boolean;
+  name?: string;
   isAdmin: boolean;
+  adminId: string;
+  shop?: {
+    name: string;
+    address: string;
+    location: [number, number];
+  };
 };
 
-export async function getAllUsers() {
-  const { data } = await supabaseClient
-    .from("app_user")
-    .select("id, email, approved, role_id");
+export async function updateUser(
+  userId: string,
+  data: {
+    name: string;
+    email: string;
+    shopName: string;
+    shopAddress: string;
+    location: [number, number];
+  },
+) {
+  const userUpdate: Partial<InferSelectModel<typeof AppUser>> = {};
+  if (data.name !== undefined) userUpdate.name = data.name;
+  if (data.email !== undefined) userUpdate.email = data.email;
 
-  return (
-    data?.map((u) => ({
-      id: u.id,
-      email: u.email,
-      approved: u.approved,
-      isAdmin: u.role_id === 2,
-    })) ?? []
-  );
-}
+  if (Object.keys(userUpdate).length > 0) {
+    await db
+      .update(AppUser)
+      .set(userUpdate)
+      .where(eq(AppUser.authUserId, userId));
+  }
 
+  const existingShop = await db
+    .select()
+    .from(Shop)
+    .where(eq(Shop.admin_id, userId));
 
-export async function approveUser(userId: string) {
-  await db
-    .update(AppUser)
-    .set({ approved: true })
-    .where(eq(AppUser.id, Number(userId)));
-}
+  if (existingShop.length > 0) {
+    const shopUpdate: Partial<InferSelectModel<typeof Shop>> = {};
+    if (data.shopName !== undefined) shopUpdate.name = data.shopName;
+    if (data.shopAddress !== undefined) shopUpdate.address = data.shopAddress;
+    if (data.location !== undefined) shopUpdate.location = data.location;
 
-export async function deleteUser(userId: string) {
-  await db.delete(AppUser).where(eq(AppUser.id, Number(userId)));
-}
+    if (Object.keys(shopUpdate).length > 0) {
+      await db.update(Shop).set(shopUpdate).where(eq(Shop.admin_id, userId));
+    }
+  } else if (data.shopName && data.shopAddress && data.location) {
+    await db.insert(Shop).values({
+      admin_id: userId,
+      name: data.shopName,
+      address: data.shopAddress,
+      location: data.location,
+    });
+  }
 
-export async function promoteUserToAdmin(userId: string) {
-  await db
-    .update(AppUser)
-    .set({ role_id: ROLE_ADMIN })
-    .where(eq(AppUser.id, Number(userId)));
-}
-
-export async function revokeApproval(userId: string) {
-  await db
-    .update(AppUser)
-    .set({ approved: false })
-    .where(eq(AppUser.id, Number(userId)));
+  return await getUser(userId);
 }

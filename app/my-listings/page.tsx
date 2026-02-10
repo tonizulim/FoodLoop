@@ -34,6 +34,7 @@ export default function MyListingsPage() {
   const [editing, setEditing] = useState<any | null>(null);
   const [form, setForm] = useState<any>({});
   const [error, setError] = useState("");
+  const [deleting, setDeleting] = useState<any | null>(null);
 
   useEffect(() => {
     const load = async () => {
@@ -60,9 +61,7 @@ export default function MyListingsPage() {
         <Card>
           <CardContent className="py-10 text-center">
             <p className="mb-4">No listings yet</p>
-            <Button onClick={() => router.push("/add-food")}>
-              Add food
-            </Button>
+            <Button onClick={() => router.push("/add-food")}>Add food</Button>
           </CardContent>
         </Card>
       )}
@@ -85,23 +84,57 @@ export default function MyListingsPage() {
                       setForm({
                         title: l.title,
                         description: l.description,
-                        publishedAt: l.publishedAt.slice(0, 16),
-                        expiresAt: l.expiresAt.slice(0, 16),
+                        publishedAt: new Date(l.publishedAt)
+                          .toISOString()
+                          .slice(0, 16),
+                        expiresAt: new Date(l.expiresAt)
+                          .toISOString()
+                          .slice(0, 16),
                       });
                     }}
                   >
                     <Pencil className="h-4 w-4" />
                   </Button>
+
                   <Button
                     size="icon"
                     variant="outline"
-                    onClick={async () => {
-                      await deleteFoodListing(l.id);
-                      reload();
-                    }}
+                    onClick={() => setDeleting(l)}
                   >
                     <Trash2 className="h-4 w-4 text-destructive" />
                   </Button>
+                  <Dialog
+                    open={!!deleting}
+                    onOpenChange={() => setDeleting(null)}
+                  >
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Confirm delete</DialogTitle>
+                      </DialogHeader>
+                      <p>
+                        Are you sure you want to delete "{deleting?.title}"?
+                      </p>
+                      <DialogFooter className="mt-4">
+                        <Button
+                          variant="outline"
+                          onClick={() => setDeleting(null)}
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          onClick={async () => {
+                            if (!deleting) return;
+                            await deleteFoodListing(deleting.id);
+                            setDeleting(null);
+                            reload();
+                          }}
+                        >
+                          Delete
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </div>
             </CardHeader>
@@ -126,9 +159,7 @@ export default function MyListingsPage() {
               <Label>Title</Label>
               <Input
                 value={form.title}
-                onChange={(e) =>
-                  setForm({ ...form, title: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
               />
             </div>
 

@@ -45,7 +45,10 @@ export function Navbar({ isAdmin }: NavbarProps) {
     { href: "/my-listings", label: "My Listings", icon: List },
   ];
 
-  const adminLinks = [{ href: "/admin", label: "My Users", icon: Shield }];
+  const adminLinks = [
+    { href: "/admin", label: "My Users", icon: Shield },
+    { href: "/register", label: "Register User", icon: List },
+  ];
 
   const navLinks = [
     ...baseLinks,
@@ -104,9 +107,6 @@ export function Navbar({ isAdmin }: NavbarProps) {
                     Login
                   </Button>
                 </Link>
-                <Link href="/register">
-                  <Button size="sm">Register</Button>
-                </Link>
               </>
             )}
           </div>
@@ -157,11 +157,6 @@ export function Navbar({ isAdmin }: NavbarProps) {
                   <Link href="/login" className="block">
                     <Button variant="ghost" size="sm" className="w-full">
                       Login
-                    </Button>
-                  </Link>
-                  <Link href="/register" className="block">
-                    <Button size="sm" className="w-full">
-                      Register
                     </Button>
                   </Link>
                 </>

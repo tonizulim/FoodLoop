@@ -26,7 +26,7 @@ import {
 
 export default function AddFoodClient() {
   const { item, setItem, handleSubmit, foodFormState } = useFoodForm();
-  const foodCategory = [{ id: 1, type: "Fruits" }, { id: 2, type: "Vegetables" }, { id: 3, type: "Grains" }]; //useFoodCategory();
+  const foodCategory = useFoodCategory();
   const [hours, setHours] = useState<number>(2);
 
   return (
@@ -103,11 +103,11 @@ export default function AddFoodClient() {
                     value={item.food_id?.toString() ?? ""}
                     onValueChange={(v) => setItem((p) => ({ ...p, food_id: Number(v) }))}
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select category" />
                     </SelectTrigger>
                     <SelectContent>
-                      {foodCategory.map((c) => (
+                      {foodCategory.foodCategory.map((c) => (
                         <SelectItem key={c.id} value={c.id.toString()}>
                           {c.type}
                         </SelectItem>

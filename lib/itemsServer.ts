@@ -14,7 +14,6 @@ export async function createFoodItem(data: {
   const session = await getServerSession();
   if (!session) throw new Error("Unauthorized");
 
-  // Dobavi shop id
   const shop = await db
     .select()
     .from(Shop)

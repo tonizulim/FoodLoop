@@ -3,7 +3,6 @@ import { supabaseClient } from "../supabase/server";
 import { itemSchema } from "@/validators/itemValidator";
 import { formatZodError } from "../zodHelpers";
 import { Result } from "../result";
-import { logError } from "../logger";
 import { Listing } from "@/types/Listing";
 import { LocationPoint } from "@/types/Location";
 
@@ -66,7 +65,6 @@ export async function getActiveItems() {
 
   if (error) {
     console.error("Get error:", error);
-    await logError(error);
     return Result.error("server error");
   }
 
@@ -108,7 +106,6 @@ export async function getItem(id: number) {
 
   if (error) {
     console.error("Get error:", error);
-    await logError(error);
     return Result.error("server error");
   }
 
@@ -129,7 +126,6 @@ export async function addItem(item: NewItem) {
 
   if (error) {
     console.error("Insert error:", error);
-    await logError(error);
     return Result.error("server error");
   }
 

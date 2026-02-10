@@ -9,17 +9,14 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Shield, UserCheck, UserX } from "lucide-react";
 
-import {
-  approveUser,
-  deleteUser,
-  type User,
-} from "@/lib/server-actions/user";
+import { deleteUser, type User } from "@/lib/server-actions/user";
+import { useRouter } from "next/navigation";
 
 export default function AdminClient({ users }: { users: User[] }) {
   const [data] = useState(users);
+  const router = useRouter();
 
   const reload = () => location.reload();
 
@@ -38,72 +35,40 @@ export default function AdminClient({ users }: { users: User[] }) {
 
         <div className="grid gap-4">
           {data.map((user) => (
-            <Card key={user.id}>
+            <Card key={user.adminId}>
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <CardTitle className="text-lg">
-                        {user.email}
-                      </CardTitle>
-
-                      {user.isAdmin && (
-                        <Badge className="gap-1">
-                          <Shield className="h-3 w-3" />
-                          Admin
-                        </Badge>
-                      )}
-
-                      {user.approved ? (
-                        <Badge className="bg-green-600 hover:bg-green-700 gap-1">
-                          <UserCheck className="h-3 w-3" />
-                          Approved
-                        </Badge>
-                      ) : (
-                        <Badge variant="secondary" className="gap-1">
-                          <UserX className="h-3 w-3" />
-                          Pending
-                        </Badge>
-                      )}
+                      <CardTitle className="text-lg">{user.email}</CardTitle>
                     </div>
-
-                    <CardDescription>
-                      User ID: {user.id}
-                    </CardDescription>
+                    <CardDescription>User ID: {user.adminId}</CardDescription>
                   </div>
                 </div>
               </CardHeader>
 
               <CardContent>
                 <div className="flex flex-wrap gap-2">
-                  {!user.approved && (
-                    <Button
-                      size="sm"
-                      className="gap-2"
-                      onClick={async () => {
-                        await approveUser(user.id);
-                        reload();
-                      }}
-                    >
-                      <UserCheck className="h-4 w-4" />
-                      Approve
-                    </Button>
-                  )}
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="gap-2"
+                    onClick={async () => {
+                      await deleteUser(user.adminId);
+                      reload();
+                    }}
+                  >
+                    <Shield className="h-4 w-4" />
+                    Delete
+                  </Button>
 
-                  {!user.isAdmin && (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="gap-2"
-                      onClick={async () => {
-                        await deleteUser(user.id);
-                        reload();
-                      }}
-                    >
-                      <Shield className="h-4 w-4" />
-                      Decline
-                    </Button>
-                  )}
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => router.push(`/user/${user.adminId}`)}
+                  >
+                    Edit
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -112,9 +77,7 @@ export default function AdminClient({ users }: { users: User[] }) {
           {data.length === 0 && (
             <Card>
               <CardContent className="py-12 text-center">
-                <p className="text-muted-foreground">
-                  No users found
-                </p>
+                <p className="text-muted-foreground">No users found</p>
               </CardContent>
             </Card>
           )}

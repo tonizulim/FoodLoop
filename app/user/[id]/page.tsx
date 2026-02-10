@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -14,14 +14,15 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { adminCreateUser } from "@/hooks/adminCreateUser";
+import { getUser, updateUser } from "@/lib/server-actions/user";
 
-export default function RegisterPage() {
+export default function EditUserPage() {
   const router = useRouter();
+  const params = useParams();
+  const userId = params.id as string;
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [shopName, setShopName] = useState("");
   const [shopAddress, setShopAddress] = useState("");
   const [lat, setLat] = useState("");
@@ -30,38 +31,49 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    if (!userId) return;
+
+    async function fetchUser() {
+      try {
+        const user = await getUser(userId);
+        if (!user) throw new Error("User not found");
+
+        setName(user.name || "");
+        setEmail(user.email || "");
+        setShopName(user.shop?.name || "");
+        setShopAddress(user.shop?.address || "");
+        setLat(user.shop?.location?.toString() || "");
+        setLng(user.shop?.location?.toString() || "");
+      } catch (err: any) {
+        setError(err.message || "Failed to load user");
+      }
+    }
+
+    fetchUser();
+  }, [userId]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
 
-    if (
-      !name ||
-      !email ||
-      !password ||
-      !shopName ||
-      !shopAddress ||
-      !lat ||
-      !lng
-    ) {
+    if (!name || !email || !shopName || !shopAddress || !lat || !lng) {
       setError("All fields are required");
       return;
     }
 
     setLoading(true);
-
     try {
-      await adminCreateUser({
+      await updateUser(userId, {
         name,
         email,
-        password,
         shopName,
         shopAddress,
         location: [Number(lat), Number(lng)],
       });
-
       router.push("/admin");
     } catch (err: any) {
-      setError(err.message || "Failed to create user");
+      setError(err.message || "Failed to update user");
     } finally {
       setLoading(false);
     }
@@ -71,9 +83,9 @@ export default function RegisterPage() {
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4 bg-secondary/30">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Create user & shop</CardTitle>
+          <CardTitle>Edit user & shop</CardTitle>
           <CardDescription>
-            Admin creates a new user with their shop
+            Update user information and their shop details
           </CardDescription>
         </CardHeader>
 
@@ -87,37 +99,21 @@ export default function RegisterPage() {
 
             <div className="space-y-2">
               <Label>Name</Label>
-              <Input
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
+              <Input value={name} onChange={(e) => setName(e.target.value)} />
             </div>
 
             <div className="space-y-2">
               <Label>Email</Label>
               <Input
                 type="email"
-                required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
             </div>
 
             <div className="space-y-2">
-              <Label>Password</Label>
-              <Input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-
-            <div className="space-y-2">
               <Label>Shop name</Label>
               <Input
-                required
                 value={shopName}
                 onChange={(e) => setShopName(e.target.value)}
               />
@@ -126,7 +122,6 @@ export default function RegisterPage() {
             <div className="space-y-2">
               <Label>Shop address</Label>
               <Input
-                required
                 value={shopAddress}
                 onChange={(e) => setShopAddress(e.target.value)}
               />
@@ -138,7 +133,6 @@ export default function RegisterPage() {
                 <Input
                   type="number"
                   step="any"
-                  required
                   value={lat}
                   onChange={(e) => setLat(e.target.value)}
                 />
@@ -148,7 +142,6 @@ export default function RegisterPage() {
                 <Input
                   type="number"
                   step="any"
-                  required
                   value={lng}
                   onChange={(e) => setLng(e.target.value)}
                 />
@@ -158,7 +151,7 @@ export default function RegisterPage() {
 
           <CardFooter>
             <Button className="w-full" disabled={loading}>
-              {loading ? "Creating..." : "Create user & shop"}
+              {loading ? "Updating..." : "Update user & shop"}
             </Button>
           </CardFooter>
         </form>
