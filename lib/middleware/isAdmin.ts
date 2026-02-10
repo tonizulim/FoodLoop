@@ -8,16 +8,8 @@ export async function isAdmin() {
     return false;
   }
 
-  if (
-    user.role_id !== ROLE_ADMIN &&
-    user.role_id !== ROLE_SUPER_ADMIN
-  ) {
+  if (user.isAdmin !== true) {
     return false;
   }
-
-  if (!user.approved) {
-    return false;
-  }
-
   return true;
 }

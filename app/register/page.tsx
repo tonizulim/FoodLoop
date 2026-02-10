@@ -14,11 +14,12 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { adminCreateUser } from "@/hooks/admin-create-user";
+import { adminCreateUser } from "@/hooks/adminCreateUser";
 
 export default function RegisterPage() {
   const router = useRouter();
 
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [shopName, setShopName] = useState("");
@@ -33,7 +34,15 @@ export default function RegisterPage() {
     e.preventDefault();
     setError("");
 
-    if (!email || !password || !shopName || !shopAddress || !lat || !lng) {
+    if (
+      !name ||
+      !email ||
+      !password ||
+      !shopName ||
+      !shopAddress ||
+      !lat ||
+      !lng
+    ) {
       setError("All fields are required");
       return;
     }
@@ -42,6 +51,7 @@ export default function RegisterPage() {
 
     try {
       await adminCreateUser({
+        name,
         email,
         password,
         shopName,
@@ -74,6 +84,15 @@ export default function RegisterPage() {
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
+
+            <div className="space-y-2">
+              <Label>Name</Label>
+              <Input
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </div>
 
             <div className="space-y-2">
               <Label>Email</Label>
@@ -124,7 +143,6 @@ export default function RegisterPage() {
                   onChange={(e) => setLat(e.target.value)}
                 />
               </div>
-
               <div className="space-y-2">
                 <Label>Longitude</Label>
                 <Input

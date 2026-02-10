@@ -28,7 +28,8 @@ export const AppUser = pgTable("app_user", {
   authUserId: text("auth_user_id")
     .notNull()
     .references(() => user.id),
-  isAdmin: boolean().default(false).notNull(), // ⬅️ svi su default useri, samo ti postavljaš true
+  isAdmin: boolean().default(false).notNull(),
+  name: varchar({ length: 255 }),
 });
 
 export const Food = pgTable("Food", {

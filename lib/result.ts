@@ -6,12 +6,10 @@ export class Result<T, E = unknown> {
     public readonly error?: Record<string, string>
   ) {}
 
-  // Success
   static ok<T>(data: T, message?: string): Result<T> {
     return new Result<T>(true, message, data, undefined);
   }
 
-  // Error
   static error<E>(
     message: string,
     error?: Record<string, string>
