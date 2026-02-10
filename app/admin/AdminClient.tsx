@@ -9,13 +9,21 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { Shield, UserCheck, UserX } from "lucide-react";
+import { Shield } from "lucide-react";
 
 import { deleteUser, type User } from "@/lib/server-actions/user";
 import { useRouter } from "next/navigation";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function AdminClient({ users }: { users: User[] }) {
   const [data] = useState(users);
+  const [deleting, setDeleting] = useState<User | null>(null); // stanje za potvrdu brisanja
   const router = useRouter();
 
   const reload = () => location.reload();
@@ -49,14 +57,12 @@ export default function AdminClient({ users }: { users: User[] }) {
 
               <CardContent>
                 <div className="flex flex-wrap gap-2">
+                  {/* Dugme za brisanje otvara dialog */}
                   <Button
                     size="sm"
                     variant="outline"
                     className="gap-2"
-                    onClick={async () => {
-                      await deleteUser(user.adminId);
-                      reload();
-                    }}
+                    onClick={() => setDeleting(user)}
                   >
                     <Shield className="h-4 w-4" />
                     Delete
@@ -83,6 +89,35 @@ export default function AdminClient({ users }: { users: User[] }) {
           )}
         </div>
       </div>
+
+      {/* --- Dialog za potvrdu brisanja --- */}
+      <Dialog open={!!deleting} onOpenChange={() => setDeleting(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm Delete</DialogTitle>
+          </DialogHeader>
+          <p className="py-2">
+            Are you sure you want to delete user{" "}
+            <strong>{deleting?.email}</strong>? This action cannot be undone.
+          </p>
+          <DialogFooter className="mt-4">
+            <Button variant="outline" onClick={() => setDeleting(null)}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={async () => {
+                if (!deleting) return;
+                await deleteUser(deleting.adminId);
+                setDeleting(null);
+                reload();
+              }}
+            >
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

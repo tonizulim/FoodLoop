@@ -157,7 +157,7 @@ export default function RegisterPage() {
           </CardContent>
 
           <CardFooter>
-            <Button className="w-full" disabled={loading}>
+            <Button className="w-full mt-5" disabled={loading}>
               {loading ? "Creating..." : "Create user & shop"}
             </Button>
           </CardFooter>
