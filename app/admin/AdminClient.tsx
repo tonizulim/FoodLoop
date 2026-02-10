@@ -48,7 +48,6 @@ export default function AdminClient({ users }: { users: User[] }) {
 
               <CardContent>
                 <div className="flex flex-wrap gap-2">
-                  {!user.isAdmin && (
                     <Button
                       size="sm"
                       variant="outline"
@@ -61,7 +60,6 @@ export default function AdminClient({ users }: { users: User[] }) {
                       <Shield className="h-4 w-4" />
                       Delete
                     </Button>
-                  )}
                 </div>
               </CardContent>
             </Card>
