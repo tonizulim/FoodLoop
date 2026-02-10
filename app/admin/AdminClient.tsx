@@ -9,13 +9,14 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Shield, UserCheck, UserX } from "lucide-react";
 
 import { deleteUser, type User } from "@/lib/server-actions/user";
+import { useRouter } from "next/navigation";
 
 export default function AdminClient({ users }: { users: User[] }) {
   const [data] = useState(users);
+  const router = useRouter();
 
   const reload = () => location.reload();
 
@@ -34,32 +35,40 @@ export default function AdminClient({ users }: { users: User[] }) {
 
         <div className="grid gap-4">
           {data.map((user) => (
-            <Card key={user.id}>
+            <Card key={user.adminId}>
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
                       <CardTitle className="text-lg">{user.email}</CardTitle>
                     </div>
-                    <CardDescription>User ID: {user.id}</CardDescription>
+                    <CardDescription>User ID: {user.adminId}</CardDescription>
                   </div>
                 </div>
               </CardHeader>
 
               <CardContent>
                 <div className="flex flex-wrap gap-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="gap-2"
-                      onClick={async () => {
-                        await deleteUser(user.id);
-                        reload();
-                      }}
-                    >
-                      <Shield className="h-4 w-4" />
-                      Delete
-                    </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="gap-2"
+                    onClick={async () => {
+                      await deleteUser(user.id);
+                      reload();
+                    }}
+                  >
+                    <Shield className="h-4 w-4" />
+                    Delete
+                  </Button>
+
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => router.push(`/user/${user.adminId}`)}
+                  >
+                    Edit
+                  </Button>
                 </div>
               </CardContent>
             </Card>
