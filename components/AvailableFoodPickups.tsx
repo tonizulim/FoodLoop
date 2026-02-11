@@ -10,7 +10,7 @@ export default function AvailableFoodPickups() {
 
   const [searchQuery] = useQueryState(
     "query",
-    parseAsString.withDefault("").withOptions({ shallow: false })
+    parseAsString.withDefault("").withOptions({ shallow: false }),
   );
 
   return (
@@ -29,7 +29,7 @@ export default function AvailableFoodPickups() {
         </p>
       </div>
 
-      {loading && <AvailableFoodPickupsLoadingSkeleton />}
+      {true && <AvailableFoodPickupsLoadingSkeleton />}
 
       {!loading && filteredListings.length === 0 && (
         <div className="text-center py-16">
