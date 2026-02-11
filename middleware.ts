@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(req: NextRequest) {
-  const token = req.cookies.get("my-app.session_token")?.value;
+  const token = req.cookies.get("__Secure-my-app.session_token")?.value;
 
   if (!token) {
     return NextResponse.redirect(new URL("/login", req.url));
@@ -11,8 +11,5 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/add-food/:path*",
-    "/my-listings/:path*",
-  ],
+  matcher: ["/add-food/:path*", "/my-listings/:path*"],
 };
