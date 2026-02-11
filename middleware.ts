@@ -14,8 +14,5 @@ export const config = {
   matcher: [
     "/add-food/:path*",
     "/my-listings/:path*",
-    "/admin/:path*",
-    "/user/:path*",
-    "/register",
   ],
 };

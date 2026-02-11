@@ -29,7 +29,7 @@ export default function AvailableFoodPickups() {
         </p>
       </div>
 
-      {true && <AvailableFoodPickupsLoadingSkeleton />}
+      {loading && <AvailableFoodPickupsLoadingSkeleton />}
 
       {!loading && filteredListings.length === 0 && (
         <div className="text-center py-16">
