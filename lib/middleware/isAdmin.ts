@@ -1,5 +1,4 @@
 import { getCurrentAppUser } from "@/lib/getCurrentUser";
-import { ROLE_ADMIN, ROLE_SUPER_ADMIN } from "@/types/roles";
 
 export async function isAdmin() {
   const user = await getCurrentAppUser();

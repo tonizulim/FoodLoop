@@ -8,7 +8,7 @@ import AvailableFoodPickupsLoadingSkeleton from "./AvailableFoodPickupsLoadingSk
 export default function AvailableFoodPickups() {
   const { loading, filteredListings } = useFilteredItems();
 
-  const [searchQuery, setSearchQuery] = useQueryState(
+  const [searchQuery] = useQueryState(
     "query",
     parseAsString.withDefault("").withOptions({ shallow: false })
   );
@@ -19,7 +19,6 @@ export default function AvailableFoodPickups() {
         <h2 className="text-2xl md:text-3xl font-bold mb-2">
           Available Food Pickups
         </h2>
-
         <p className="text-muted-foreground">
           {!loading && filteredListings.length !== 0 && (
             <>
