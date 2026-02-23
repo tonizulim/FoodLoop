@@ -28,7 +28,7 @@ export function useFoodForm() {
     } catch (err: any) {
       setFoodFormState({
         loading: false,
-        error: err.message || "Failed",
+        error: "Failed to submit food item. Please try again. Make sure all required fields are filled.",
         success: false,
       });
     }

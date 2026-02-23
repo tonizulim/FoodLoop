@@ -36,13 +36,17 @@ export default function AddFoodClient() {
           <h1 className="text-3xl md:text-4xl font-bold mb-2">
             Share Your Food
           </h1>
-          <p className="text-muted-foreground">Help reduce waste by sharing surplus food</p>
+          <p className="text-muted-foreground">
+            Help reduce waste by sharing surplus food
+          </p>
         </div>
 
         <Card>
           <CardHeader>
             <CardTitle>Create Food Listing</CardTitle>
-            <CardDescription>Fill in the details about the food</CardDescription>
+            <CardDescription>
+              Fill in the details about the food
+            </CardDescription>
           </CardHeader>
 
           <form onSubmit={handleSubmit}>
@@ -67,7 +71,9 @@ export default function AddFoodClient() {
                 <Label>Food title *</Label>
                 <Input
                   value={item.title}
-                  onChange={(e) => setItem((p) => ({ ...p, title: e.target.value }))}
+                  onChange={(e) =>
+                    setItem((p) => ({ ...p, title: e.target.value }))
+                  }
                 />
               </div>
 
@@ -76,7 +82,9 @@ export default function AddFoodClient() {
                 <Textarea
                   rows={4}
                   value={item.description}
-                  onChange={(e) => setItem((p) => ({ ...p, description: e.target.value }))}
+                  onChange={(e) =>
+                    setItem((p) => ({ ...p, description: e.target.value }))
+                  }
                 />
               </div>
 
@@ -85,13 +93,20 @@ export default function AddFoodClient() {
                   <Label>Available (hours)</Label>
                   <Input
                     type="number"
+                    min={0.5}
+                    step={0.5}
                     value={hours}
                     onChange={(e) => {
-                      const h = Number(e.target.value);
+                      let h = Number(e.target.value);
+
+                      if (h < 0.5) h = 0.5;
+
                       setHours(h);
                       setItem((p) => ({
                         ...p,
-                        expires_at: new Date(Date.now() + h * 3600_000).toISOString(),
+                        expires_at: new Date(
+                          Date.now() + h * 3600_000,
+                        ).toISOString(),
                       }));
                     }}
                   />
@@ -101,7 +116,9 @@ export default function AddFoodClient() {
                   <Label>Category *</Label>
                   <Select
                     value={item.food_id?.toString() ?? ""}
-                    onValueChange={(v) => setItem((p) => ({ ...p, food_id: Number(v) }))}
+                    onValueChange={(v) =>
+                      setItem((p) => ({ ...p, food_id: Number(v) }))
+                    }
                   >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Select category" />
@@ -117,7 +134,11 @@ export default function AddFoodClient() {
                 </div>
               </div>
 
-              <Button type="submit" className="w-full" disabled={foodFormState.loading}>
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={foodFormState.loading}
+              >
                 {foodFormState.loading ? "Posting..." : "Post food"}
               </Button>
             </CardContent>
