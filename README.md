@@ -13,11 +13,16 @@
 
 ## My Project Links
 
+
 ### Semester Project
 
-<!-- - Link to your production version: [**Production Version**](URL_TO_PRODUCTION_VERSION) <!-- Replace with actual URL -->
-<!-- - Link to your final report: [**Final Report**](URL_TO_FINAL_REPORT) <!-- Replace with actual URL -->
-<!-- Add more as necessary -->
+- Link to production version: [**Production Version**](https://food-loop-tau.vercel.app/) <!-- Replace with actual URL -->
+- Link to final report: [**Final Report**](https://github.com/tonizulim/FoodLoop/blob/main/final_report.md) <!-- Replace with actual URL -->
+
+Test accounts:
+- admin@test.com - Admin123!
+- user1@gmail.com - User123!
+- user2@gmail.com - User123!
 
 ### Semester Assignments
 
@@ -72,8 +77,11 @@ Create a .env.local file in the root and fill it according to the example below:
 - NEXT_PUBLIC_SUPABASE_URL – Your Supabase project URL
 - NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY – Public anon key for client-side
 - SUPABASE_SERVICE_ROLE_KEY – Service role key (server-side only)
+- NEXT_PUBLIC_SUPABASE_ANON_KEY 
+- NEXT_PUBLIC_SUPABASE_SERVICE_ROLE_KEY
 - BETTER_AUTH_SECRET – Secret key for Better Auth (random string)
 - BETTER_AUTH_URL – Base URL of the application (local: http://localhost:3000)
+
 
 ### 🗄️ Database
 
@@ -93,3 +101,22 @@ For development:
 The app will be available at:
 
 http://localhost:3000
+
+## Project Requirements
+
+### Web Application Requirements
+
+- [ ] The application will be used from a web browser
+- [ ] It will be accessible on devices of different sizes
+- [ ] Users can search/filter products or services
+- [ ] The application will support user login for showing private content
+- [ ] One of the public pages will be a blog containing multiple posts with diverse content (images, videos, code snippets)
+- [ ] Part of the application's content will be stored in a remote headless CMS system
+
+### Project Demonstration
+
+- [ ] Show the production version of the project or produce a video demonstrating the above requirements
+- [ ] The production version will be deployed online (on an appropriate cloud platform [Vercel](https://vercel.com), [Netlify](https://www.netlify.com/) or personal VPS)
+- [ ] Conduct usablity evaluation of your web application
+- [ ] Analyze the application's performance ([PageSpeed Insights](https://pagespeed.web.dev/))
+- [ ] The analysis results will be part of the final report
