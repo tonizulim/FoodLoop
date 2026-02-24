@@ -10,6 +10,7 @@ export async function createFoodItem(data: {
   description: string;
   food_id: number;
   expires_at: string;
+  image: string;
 }) {
   const session = await getServerSession();
   if (!session) throw new Error("Unauthorized");
@@ -28,6 +29,7 @@ export async function createFoodItem(data: {
     title: data.title,
     description: data.description,
     published_at: new Date(),
+    image: data.image,
     expires_at: new Date(data.expires_at),
   });
 }
