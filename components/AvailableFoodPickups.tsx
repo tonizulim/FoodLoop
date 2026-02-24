@@ -1,10 +1,12 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { FoodCard } from "@/components/FoodCard";
 import { useFilteredItems } from "@/hooks/useFilteredItems";
 import { useQueryState, parseAsString } from "nuqs";
 import AvailableFoodPickupsLoadingSkeleton from "./AvailableFoodPickupsLoadingSkeleton";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
 
 export default function AvailableFoodPickups() {
   const { loading, filteredListings } = useFilteredItems();
@@ -13,6 +15,14 @@ export default function AvailableFoodPickups() {
     "query",
     parseAsString.withDefault("").withOptions({ shallow: false }),
   );
+
+  // 👇 koliko itema prikazujemo
+  const [visibleCount, setVisibleCount] = useState(10);
+
+  // 👇 resetiraj na 10 kad se promijeni search
+  useEffect(() => {
+    setVisibleCount(10);
+  }, [searchQuery]);
 
   return (
     <section className="container mx-auto px-4 py-12">
@@ -54,11 +64,26 @@ export default function AvailableFoodPickups() {
       )}
 
       {!loading && filteredListings.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredListings.map((listing) => (
-            <FoodCard key={listing.id} item={listing} />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredListings
+              .slice(0, visibleCount)
+              .map((listing) => (
+                <FoodCard key={listing.id} item={listing} />
+              ))}
+          </div>
+
+          {visibleCount < filteredListings.length && (
+            <div className="flex justify-center mt-10">
+              <Button
+                onClick={() => setVisibleCount((prev) => prev + 10)}
+                variant="outline"
+              >
+                Load more
+              </Button>
+            </div>
+          )}
+        </>
       )}
     </section>
   );
