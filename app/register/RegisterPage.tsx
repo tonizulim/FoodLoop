@@ -2,6 +2,7 @@
 import { redirect } from "next/navigation";
 import { getAllUsers } from "@/lib/server-actions/user";
 import { isAdmin } from "@/lib/middleware/isAdmin";
+import Map from "../../components/Map";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -29,6 +30,10 @@ export default function Register() {
   const [shopAddress, setShopAddress] = useState("");
   const [lat, setLat] = useState("");
   const [lng, setLng] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState<{
+    lng: number;
+    lat: number;
+  } | null>(null);
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -67,6 +72,31 @@ export default function Register() {
       setError(err.message || "Failed to create user");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchAddressFromCoords = async (lat: number, lng: number) => {
+    try {
+      const res = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`,
+      );
+
+      const data = await res.json();
+
+      if (!data?.address) return;
+
+      const { road, house_number, city, town, village } = data.address;
+
+      const streetPart = [road, house_number].filter(Boolean).join(" ");
+      const cityPart = city || town || village || "";
+
+      const formattedAddress = [streetPart, cityPart]
+        .filter(Boolean)
+        .join(", ");
+
+      setShopAddress(formattedAddress);
+    } catch (err) {
+      console.error("Failed to fetch address", err);
     }
   };
 
@@ -135,27 +165,18 @@ export default function Register() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Latitude</Label>
-                <Input
-                  type="number"
-                  step="any"
-                  required
-                  value={lat}
-                  onChange={(e) => setLat(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label>Longitude</Label>
-                <Input
-                  type="number"
-                  step="any"
-                  required
-                  value={lng}
-                  onChange={(e) => setLng(e.target.value)}
-                />
-              </div>
+            <div className="h-64 w-full rounded-md overflow-hidden">
+              <Map
+                selectedLocation={selectedLocation}
+                setSelectedLocation={setSelectedLocation}
+                onLocationSelect={(lng, lat) => {
+                  setLat(lat.toString());
+                  setLng(lng.toString());
+                  setSelectedLocation({ lng, lat });
+
+                  fetchAddressFromCoords(lat, lng);
+                }}
+              />
             </div>
           </CardContent>
 
