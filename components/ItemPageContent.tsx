@@ -53,12 +53,18 @@ export default function ItemPageContent({ id }: { id: number }) {
                 Posted {new Date(item.published_at).toLocaleDateString()}
               </CardFooter>
             </div>
-            <div className="relative w-full h-50 sm:h-60 sm:w-60 overflow-hidden rounded-lg">
+            <div className="relative w-full h-50 sm:h-60 sm:w-60 overflow-hidden">
               <Image
-                //src={listing?.image ?? "/itemImg.png"}
-                src="/itemImg.png"
-                alt="Logo"
+                src={
+                  item.image && item.image.length > 0
+                    ? item.image
+                    : "/itemImg.png"
+                }
+                alt="Food image"
                 fill
+                sizes="(max-width: 768px) 100vw,
+         (max-width: 1024px) 50vw,
+         33vw"
                 className="object-cover rounded-md"
               />
             </div>

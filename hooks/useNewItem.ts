@@ -42,8 +42,10 @@
 import { useState } from "react";
 import { createFoodItem } from "@/lib/itemsServer";
 import { supabaseClient as supabase } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
 
 export function useFoodForm() {
+  const router = useRouter();
   const [item, setItem] = useState({
     title: "",
     description: "",
@@ -75,7 +77,7 @@ export function useFoodForm() {
     if (error) {
       console.error("Image upload error:", error);
       return null;
-    };
+    }
 
     const { data } = supabase.storage
       .from("food-images")
@@ -104,6 +106,7 @@ export function useFoodForm() {
       });
 
       setFoodFormState({ loading: false, error: "", success: true });
+      router.push("/my-listings");
 
       setItem({
         title: "",
@@ -117,7 +120,8 @@ export function useFoodForm() {
     } catch (err) {
       setFoodFormState({
         loading: false,
-        error: "Failed to submit food item. Please try again. Make sure all required fields are filled.",
+        error:
+          "Failed to submit food item. Please try again. Make sure all required fields are filled.",
         success: false,
       });
     }
