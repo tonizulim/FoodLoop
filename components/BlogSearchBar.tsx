@@ -46,7 +46,10 @@ export function BlogSearchBar({ onReset }: SearchBarProps) {
             type="text"
             placeholder="Search for food, location..."
             value={inputValue}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setPage("1");
+            }}
             className="pl-10 h-12 w-full"
           />
         </div>

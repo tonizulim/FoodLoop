@@ -41,7 +41,7 @@ export function useBlogPosts() {
 
   useEffect(() => {
     fetchBlogs();
-  }, [searchQuery]);
+  }, [searchQuery, page]);
 
   return {
     loading,

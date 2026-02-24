@@ -10,5 +10,6 @@ export type Blog = {
   imgUrl?: string;
   publishedDate: string;
   content: Document;
-  //author: string;
+  author: string;
+  description: string;
 };

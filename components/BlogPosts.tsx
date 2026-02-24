@@ -4,7 +4,7 @@ import { useQueryState, parseAsString } from "nuqs";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Newspaper, Calendar } from "lucide-react";
+import { Newspaper, Calendar, Pen } from "lucide-react";
 import Link from "next/link";
 import { Pagination } from "@/components/Pagination";
 import { notFound } from "next/navigation";
@@ -55,7 +55,7 @@ export default function BlogPosts() {
                         blog.imgUrl ? blog.imgUrl : "/../../public/itemImg.png"
                       }
                       alt={blog.title}
-                      className="object-cover"
+                      className="object-cover rounded-md"
                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     />
                   </div>
@@ -68,6 +68,12 @@ export default function BlogPosts() {
                     <span>{blog.publishedDate}</span>
                   </div>
 
+                  {/* Author */}
+                  <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-3">
+                    <Pen className="h-3.5 w-3.5" />
+                    <span>{blog.author}</span>
+                  </div>
+
                   {/* Title */}
                   <h2 className="text-lg font-semibold leading-snug mb-2 line-clamp-2">
                     {blog.title}
@@ -75,7 +81,7 @@ export default function BlogPosts() {
 
                   {/* Excerpt */}
                   <p className="text-sm text-muted-foreground line-clamp-3 mb-5 flex-1">
-                    {/* {blog.excerpt} */}
+                    {blog.description}
                   </p>
 
                   {/* Read More */}
@@ -83,7 +89,7 @@ export default function BlogPosts() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="w-full bg-transparent hover:bg-muted"
+                      className="w-full bg-transparent hover:bg-muted hover:cursor-pointer"
                     >
                       Read More
                     </Button>

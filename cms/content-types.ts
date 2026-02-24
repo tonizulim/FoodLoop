@@ -5,7 +5,8 @@ export interface TypeBlogFields {
   publishedDate: EntryFieldTypes.Date;
   heroImage: EntryFieldTypes.AssetLink;
   content: EntryFieldTypes.RichText;
-  //author: EntryFieldTypes.EntryLink;
+  authorEmail: EntryFieldTypes.Symbol;
+  description: EntryFieldTypes.Text;
 }
 
 export type TypeBlogSkeleton = EntrySkeletonType<TypeBlogFields, "blogPost">;

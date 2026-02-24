@@ -1,6 +1,7 @@
 import cms from "@/cms";
 import { TypeBlogSkeleton } from "@/cms/content-types";
 import { Blog } from "@/types/Blog";
+import { Description } from "@radix-ui/react-dialog";
 import { it } from "zod/v4/locales";
 
 export async function getBlogs(): Promise<Blog[]> {
@@ -19,6 +20,8 @@ export async function getBlogs(): Promise<Blog[]> {
     id: item.sys.id,
     title: item.fields.title,
     content: item.fields.content,
+    author: item.fields.authorEmail,
+    description: item.fields.description,
     //author: item.fields.author,
     //imgUrl: item.fields.heroImage,
     //publishedDate: item.fields.publishedDate,
@@ -59,6 +62,8 @@ export async function getBlogById(blogId: string): Promise<Blog | null> {
       id: data.sys.id,
       title: data.fields.title,
       content: data.fields.content,
+      author: data.fields.authorEmail,
+      description: data.fields.description,
       //author: data.fields.author,
       imgUrl: data.fields.heroImage?.fields?.file?.url
         ? `https:${data.fields.heroImage.fields.file.url}`
@@ -107,7 +112,8 @@ export async function getBlogPosts(
     id: item.sys.id,
     title: item.fields.title,
     content: item.fields.content,
-    //author: item.fields.author,
+    author: item.fields.authorEmail,
+    description: item.fields.description,
     //imgUrl: item.fields.heroImage,
     //publishedDate: item.fields.publishedDate,
     imgUrl: item?.fields?.heroImage?.fields?.file?.url
