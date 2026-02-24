@@ -16,12 +16,10 @@ export default function AvailableFoodPickups() {
     parseAsString.withDefault("").withOptions({ shallow: false }),
   );
 
-  // 👇 koliko itema prikazujemo
-  const [visibleCount, setVisibleCount] = useState(10);
+  const [visibleCount, setVisibleCount] = useState(6);
 
-  // 👇 resetiraj na 10 kad se promijeni search
   useEffect(() => {
-    setVisibleCount(10);
+    setVisibleCount(6);
   }, [searchQuery]);
 
   return (
@@ -76,7 +74,7 @@ export default function AvailableFoodPickups() {
           {visibleCount < filteredListings.length && (
             <div className="flex justify-center mt-10">
               <Button
-                onClick={() => setVisibleCount((prev) => prev + 10)}
+                onClick={() => setVisibleCount((prev) => prev + 6)}
                 variant="outline"
               >
                 Load more
