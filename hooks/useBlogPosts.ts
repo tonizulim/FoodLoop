@@ -1,23 +1,38 @@
 "use client";
 
-import { getBlogs } from "@/lib/server-actions/blog";
+import {
+  getBlogPosts,
+  getBlogs,
+  getBlogsCount,
+} from "@/lib/server-actions/blog";
 import { Blog } from "@/types/Blog";
-import { Listing } from "@/types/Listing";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+
+const PAGE_SIZE = parseInt(process.env.PAGE_SIZE || "6", 10);
 
 export function useBlogPosts() {
-  // const searchParams = useSearchParams();
+  const searchParams = useSearchParams();
+  const searchQuery = searchParams.get("search") ?? "";
+  const page = searchParams.get("page") ?? "1";
 
   const [loading, setLoading] = useState(false);
   const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [blogsCount, setBlogsCount] = useState(1);
 
   async function fetchBlogs() {
     setLoading(true);
     try {
-      const res = await getBlogs();
+      //const res = await getBlogPosts(parseInt(page), PAGE_SIZE, searchQuery);
+      const [res, blogsCount] = await Promise.all([
+        getBlogPosts(parseInt(page), PAGE_SIZE, searchQuery),
+        getBlogsCount(searchQuery),
+      ]);
+      console.log("aaaaaaaaaa pozvan sam", searchQuery);
+      console.log(res, blogsCount);
       if (res) {
         setBlogs(res || []);
+        setBlogsCount(blogsCount);
       }
       setLoading(false);
       return;
@@ -28,10 +43,12 @@ export function useBlogPosts() {
 
   useEffect(() => {
     fetchBlogs();
-  }, []);
+  }, [searchQuery]);
 
   return {
     loading,
     blogs,
+    blogsCount,
+    page,
   };
 }

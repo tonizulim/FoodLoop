@@ -1,6 +1,20 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@plugin "@tailwindcss/typography";
+
+@layer base {
+  /* This is a fallback to prove styles are working */
+  .prose h1 {
+    @apply text-4xl font-extrabold mb-4 block;
+    color: inherit;
+  }
+  .prose p {
+    @apply my-4 block;
+    color: inherit;
+  }
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {

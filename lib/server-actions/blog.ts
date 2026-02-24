@@ -40,9 +40,8 @@ export async function getBlogById(blogId: string): Promise<Blog | null> {
     // const data = await cms.withoutUnresolvableLinks.getEntry<TypeBlogSkeleton>(blogId, {
     //   select: ["fields.title", "fields.heroImage", "fields.publishedDate", "sys.id"],
     // });
-    const data = await cms.withoutUnresolvableLinks.getEntry<TypeBlogSkeleton>(
-      blogId
-    );
+    const data =
+      await cms.withoutUnresolvableLinks.getEntry<TypeBlogSkeleton>(blogId);
 
     //   const data = await cms.withoutUnresolvableLinks.getEntries<TypeBlogSkeleton>({
     //   content_type: "blogPost",
@@ -76,4 +75,67 @@ export async function getBlogById(blogId: string): Promise<Blog | null> {
     console.error("Error fetching blog:", err);
     return null;
   }
+}
+
+export async function getBlogPosts(
+  page: number = 1,
+  pageSize: number = 6,
+  searchQuery?: string,
+) {
+  const skip = (page - 1) * pageSize;
+
+  // Map sortBy to Contentful field format
+  // Contentful uses 'fields.fieldName' for ordering
+  // Prefix with '-' for descending order
+
+  const query: any = {
+    content_type: "blogPost",
+    skip,
+    limit: pageSize,
+  };
+
+  // Add search query if provided
+  // Contentful's query parameter searches across all text fields
+  if (searchQuery && searchQuery.trim()) {
+    query.query = searchQuery.trim();
+  }
+
+  const data =
+    await cms.withoutUnresolvableLinks.getEntries<TypeBlogSkeleton>(query);
+
+  return data.items.map((item) => ({
+    id: item.sys.id,
+    title: item.fields.title,
+    content: item.fields.content,
+    //author: item.fields.author,
+    //imgUrl: item.fields.heroImage,
+    //publishedDate: item.fields.publishedDate,
+    imgUrl: item?.fields?.heroImage?.fields?.file?.url
+      ? `https:${item.fields.heroImage.fields.file.url}`
+      : undefined, // fallback to undefined or "/placeholder.jpg"
+    publishedDate: item.fields.publishedDate
+      ? new Date(item.fields.publishedDate).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+        })
+      : "N/A",
+  }));
+}
+
+export async function getBlogsCount(searchQuery?: string) {
+  const query: any = {
+    content_type: "blogPost",
+    limit: 1,
+  };
+
+  // Add search query if provided
+  if (searchQuery && searchQuery.trim()) {
+    query.query = searchQuery.trim();
+  }
+
+  const data =
+    await cms.withoutUnresolvableLinks.getEntries<TypeBlogSkeleton>(query);
+
+  return data.total;
 }
