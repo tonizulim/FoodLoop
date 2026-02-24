@@ -46,9 +46,9 @@ export function FoodCard({ item }: FoodCardProps) {
     <Link href={`/item/${item.id}`} className="m-2">
       <Card className="transition-all hover:shadow-lg hover:border-primary">
         {/* Slika */}
-        <div className="relative w-full h-48 overflow-hidden rounded-t-lg">
+        <div className="relative w-full h-48 overflow-hidden">
           <Image
-            src="/itemImg.png"
+            src={item.image ?? "/itemImg.png"} // fallback
             alt={item.title}
             fill
             className="object-cover"

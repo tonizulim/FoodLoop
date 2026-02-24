@@ -25,7 +25,9 @@ import {
 } from "@/components/ui/select";
 
 export default function AddFoodClient() {
-  const { item, setItem, handleSubmit, foodFormState } = useFoodForm();
+  const { item, setItem, handleSubmit, foodFormState, setImageFile } =
+    useFoodForm();
+  const [fileName, setFileName] = useState("");
   const foodCategory = useFoodCategory();
   const [hours, setHours] = useState<number>(2);
 
@@ -86,6 +88,27 @@ export default function AddFoodClient() {
                     setItem((p) => ({ ...p, description: e.target.value }))
                   }
                 />
+              </div>
+
+              <div>
+                <label className="flex items-center justify-left w-full h-12 px-4 border rounded-md cursor-pointer hover:bg-muted/70 transition">
+                  <span className="text-sm text-muted-foreground">
+                    {fileName || "Upload image of your food"}
+                  </span>
+
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      if (e.target.files?.[0]) {
+                        const file = e.target.files[0];
+                        setImageFile(file); 
+                        setFileName(file.name);
+                      }
+                    }}
+                  />
+                </label>
               </div>
 
               <div className="flex gap-2">
