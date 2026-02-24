@@ -28,8 +28,6 @@ export function useBlogPosts() {
         getBlogPosts(parseInt(page), PAGE_SIZE, searchQuery),
         getBlogsCount(searchQuery),
       ]);
-      console.log("aaaaaaaaaa pozvan sam", searchQuery);
-      console.log(res, blogsCount);
       if (res) {
         setBlogs(res || []);
         setBlogsCount(blogsCount);
