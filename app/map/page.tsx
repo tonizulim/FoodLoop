@@ -28,10 +28,7 @@ export default function MapPage() {
           selectedLocation={selectedLocation}
         />
 
-        <div className="absolute top-4 right-4 bg-white dark:bg-gray-900 rounded-lg shadow-lg p-3 space-y-2 text-sm">
-          <div className="font-semibold text-gray-900 dark:text-gray-100">
-            Map Legend
-          </div>
+        <div className="absolute top-4 right-4 bg-white dark:bg-gray-900 rounded-lg shadow-lg p-3 space-y-2 text-sm mr-7">
           <div className="flex items-center gap-2">
             <div className="w-4 h-4 rounded-full bg-green-500" />
             <span className="text-gray-600 dark:text-gray-400">Available</span>

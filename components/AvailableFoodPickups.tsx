@@ -4,6 +4,7 @@ import { FoodCard } from "@/components/FoodCard";
 import { useFilteredItems } from "@/hooks/useFilteredItems";
 import { useQueryState, parseAsString } from "nuqs";
 import AvailableFoodPickupsLoadingSkeleton from "./AvailableFoodPickupsLoadingSkeleton";
+import Image from "next/image";
 
 export default function AvailableFoodPickups() {
   const { loading, filteredListings } = useFilteredItems();
@@ -32,11 +33,22 @@ export default function AvailableFoodPickups() {
       {loading && <AvailableFoodPickupsLoadingSkeleton />}
 
       {!loading && filteredListings.length === 0 && (
-        <div className="text-center py-16">
-          <p className="text-lg text-muted-foreground">
+        <div className="flex flex-col items-center justify-center text-center py-20 bg-muted/30 rounded-2xl">
+          <Image
+            src="/empty-food.png"
+            alt="No food available"
+            width={160}
+            height={160}
+            className="mb-6 opacity-80"
+          />
+          <h3 className="text-xl font-semibold mb-2">
+            {searchQuery ? "No Results Found" : "No Food Available Yet"}
+          </h3>
+
+          <p className="text-muted-foreground max-w-md">
             {searchQuery
-              ? "No listings match your search."
-              : "No food listings available yet."}
+              ? "Try adjusting your search or category filter to find available food pickups."
+              : "There are currently no food listings available. Please check back later or be the first to post one!"}
           </p>
         </div>
       )}

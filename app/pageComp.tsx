@@ -12,23 +12,25 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Image from "next/image";
+
 
 export default function PageComp() {
   const { loading, filteredListings, foodCategory } = useFilteredItems();
 
   const [filterFoodCategory, setFilterFoodCategory] = useQueryState(
     "filterFoodCategory",
-    parseAsInteger.withDefault(0).withOptions({ shallow: false })
+    parseAsInteger.withDefault(0).withOptions({ shallow: false }),
   );
 
   const [searchQuery, setSearchQuery] = useQueryState(
     "query",
-    parseAsString.withDefault("").withOptions({ shallow: false })
+    parseAsString.withDefault("").withOptions({ shallow: false }),
   );
 
   const [page, setPage] = useQueryState(
     "page",
-    parseAsInteger.withDefault(0).withOptions({ shallow: false })
+    parseAsInteger.withDefault(0).withOptions({ shallow: false }),
   );
 
   return (
@@ -116,6 +118,13 @@ export default function PageComp() {
 
         {!loading && filteredListings.length === 0 && (
           <div className="text-center py-16">
+            <Image
+                    src="/empty-food.png"
+                    alt="No food available"
+                    width={160}
+                    height={160}
+                    className="mb-6 opacity-80"
+                  />
             <p className="text-lg text-muted-foreground">
               {searchQuery
                 ? "No listings match your search."

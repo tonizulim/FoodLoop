@@ -10,7 +10,6 @@ import {
 import { Button } from "@/components/ui/button";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
@@ -27,6 +26,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Pencil, Trash2 } from "lucide-react";
+import Image from "next/image";
 
 export default function MyListingsPage() {
   const router = useRouter();
@@ -58,12 +58,18 @@ export default function MyListingsPage() {
       <h1 className="text-3xl font-bold mb-6">My Listings</h1>
 
       {listings.length === 0 && (
-        <Card>
-          <CardContent className="py-10 text-center">
-            <p className="mb-4">No listings yet</p>
-            <Button onClick={() => router.push("/add-food")}>Add food</Button>
-          </CardContent>
-        </Card>
+        <div className="flex flex-col items-center justify-center text-center py-20 bg-muted/30 rounded-2xl">
+          <Image
+            src="/empty-food.png"
+            alt="No food available"
+            width={160}
+            height={160}
+            className="mb-6 opacity-80"
+          />
+          <h3 className="text-xl font-semibold mb-2">
+            You don't have any listings yet
+          </h3>
+        </div>
       )}
 
       <div className="space-y-4">
