@@ -63,7 +63,7 @@ export function Navbar({ isAdmin }: NavbarProps) {
             href="/"
             className="flex items-center gap-2 font-semibold text-lg"
           >
-            <Image
+            <img
               src="/logo.svg" // your logo in /public/logo.svg
               alt="FoodShare Logo"
               width={32} // adjust width
