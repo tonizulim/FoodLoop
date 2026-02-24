@@ -152,7 +152,7 @@ export default function SearchBar({ onReset }: SearchBarProps) {
               setFilterFoodCategory(value === "none" ? 0 : Number(value))
             }
           >
-            <SelectTrigger className="w-full min-h-12">
+            <SelectTrigger className="w-full min-h-12 cursor-pointer">
               <SelectValue placeholder="Select a food category" />
             </SelectTrigger>
             <SelectContent>

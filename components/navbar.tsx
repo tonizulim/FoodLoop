@@ -79,7 +79,7 @@ export function Navbar({ isAdmin }: NavbarProps) {
                 <Button
                   variant={pathname === href ? "secondary" : "ghost"}
                   size="sm"
-                  className="gap-2 hover:bg-muted"
+                  className="gap-2 hover:bg-muted cursor-pointer"
                 >
                   {/* <Icon className="h-4 w-4" /> */}
                   {label}
@@ -97,13 +97,14 @@ export function Navbar({ isAdmin }: NavbarProps) {
                 }}
                 variant="outline"
                 size="sm"
+                className="cursor-pointer"
               >
                 Logout
               </Button>
             ) : (
               <>
                 <Link href="/login">
-                  <Button variant="ghost" size="sm">
+                  <Button variant="ghost" size="sm" className="cursor-pointer">
                     Login
                   </Button>
                 </Link>
@@ -131,7 +132,7 @@ export function Navbar({ isAdmin }: NavbarProps) {
                 <Button
                   variant={pathname === href ? "secondary" : "ghost"}
                   size="sm"
-                  className="w-full justify-start gap-2"
+                  className="w-full justify-start gap-2 cursor-pointer"
                 >
                   <Icon className="h-4 w-4" />
                   {label}
@@ -148,14 +149,14 @@ export function Navbar({ isAdmin }: NavbarProps) {
                   }}
                   variant="outline"
                   size="sm"
-                  className="w-full"
+                  className="w-full cursor-pointer"
                 >
                   Logout
                 </Button>
               ) : (
                 <>
                   <Link href="/login" className="block">
-                    <Button variant="ghost" size="sm" className="w-full">
+                    <Button variant="ghost" size="sm" className="w-full cursor-pointer">
                       Login
                     </Button>
                   </Link>

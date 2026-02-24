@@ -7,6 +7,7 @@ import {
   deleteFoodListing,
   editFoodListing,
 } from "@/lib/itemsActions";
+import { supabaseClient as supabase } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -35,6 +36,8 @@ export default function MyListingsPage() {
   const [form, setForm] = useState<any>({});
   const [error, setError] = useState("");
   const [deleting, setDeleting] = useState<any | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [fileName, setFileName] = useState<string | null>(null);
 
   useEffect(() => {
     const load = async () => {
@@ -52,6 +55,25 @@ export default function MyListingsPage() {
     const data = await getUserListings();
     setListings(data);
   };
+
+  async function uploadImage(): Promise<string | null> {
+    if (!imageFile) return null;
+
+    const fileExt = imageFile.name.split(".").pop();
+    const fileName = `${Date.now()}.${fileExt}`;
+
+    const { error } = await supabase.storage
+      .from("food-images")
+      .upload(fileName, imageFile);
+
+    if (error) return null;
+
+    const { data } = supabase.storage
+      .from("food-images")
+      .getPublicUrl(fileName);
+
+    return data.publicUrl;
+  }
 
   return (
     <div className="container mx-auto py-8 max-w-4xl">
@@ -76,12 +98,19 @@ export default function MyListingsPage() {
         {listings.map((l) => (
           <Card key={l.id}>
             <CardHeader>
-              <div className="flex justify-between">
+              <div className="flex items-start gap-4">
+                <Image
+                  src={l.image && l.image.length > 0 ? l.image : "/itemImg.png"}
+                  alt={l.title}
+                  width={72}
+                  height={72}
+                  className="w-18 h-18 object-cover rounded-md"
+                />
                 <div>
                   <CardTitle>{l.title}</CardTitle>
                   <CardDescription>{l.description}</CardDescription>
                 </div>
-                <div className="flex gap-2">
+                <div className="ml-auto flex gap-2">
                   <Button
                     size="icon"
                     variant="outline"
@@ -96,6 +125,8 @@ export default function MyListingsPage() {
                         expiresAt: new Date(l.expiresAt)
                           .toISOString()
                           .slice(0, 16),
+                        image: l.image || "",
+                        food_id: l.food_id,
                       });
                     }}
                   >
@@ -180,6 +211,29 @@ export default function MyListingsPage() {
             </div>
 
             <div>
+              <Label>Change image</Label>
+              <div>
+                <label className="flex items-center justify-left w-full h-12 px-4 border rounded-md cursor-pointer hover:bg-muted/70 transition">
+                <span className="text-sm text-muted-foreground">
+                    {form.image ? "Change image of your food" : "Upload image of your food"}
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={(e) => {
+                      if (e.target.files?.[0]) {
+                        const file = e.target.files[0];
+                        setImageFile(file); 
+                        setFileName(file.name);
+                      }
+                    }}
+                  />
+                </label>
+              </div>
+            </div>
+
+            <div>
               <Label>Published</Label>
               <Input
                 type="datetime-local"
@@ -209,8 +263,20 @@ export default function MyListingsPage() {
             <Button
               onClick={async () => {
                 try {
-                  await editFoodListing(editing.id, form);
+                  let imageUrl = form.image;
+
+                  if (imageFile) {
+                    const uploadedUrl = await uploadImage();
+                    if (uploadedUrl) imageUrl = uploadedUrl;
+                  }
+
+                  await editFoodListing(editing.id, {
+                    ...form,
+                    image: imageUrl,
+                  });
+
                   setEditing(null);
+                  setImageFile(null);
                   reload();
                 } catch {
                   setError("Update failed");
