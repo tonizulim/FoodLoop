@@ -22,19 +22,11 @@ export const metadata: Metadata = {
   title: "FoodLoop",
   description: "A community platform for sharing food and reducing waste",
   icons: {
-   // icon: [
-     // { url: "/favicon.ico" },
-     // { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-     // { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-    //],
-    //apple: "/apple-touch-icon.png",
-    icons: {
-     icon: "/logo.svg",
-     shortcut: "/logo.svg",
-     apple: "/logo.png", // MUST be PNG for iOS
+    icon: "/logo.svg",
+    shortcut: "/logo.svg",
+    apple: "/logo.png", // MUST be PNG for iOS
   },
-  //},
-  
+
   // icons: {
   //   icon: [
   //     { url: "/favicon.ico" },
