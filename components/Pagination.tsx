@@ -46,12 +46,12 @@ export const Pagination: React.FC<PaginationProps> = ({
       <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4 flex justify-between items-center">
         <button
           onClick={handlePrev}
+          disabled={isFirstPage}
           className={`px-4 py-2 rounded-md transition-colors duration-200 ${
             isFirstPage
               ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              : "bg-gray-200 text-gray-700 hover:bg-gray-300 cursor-pointer"
           }`}
-          disabled={isFirstPage}
         >
           Prev
         </button>
@@ -64,12 +64,12 @@ export const Pagination: React.FC<PaginationProps> = ({
 
         <button
           onClick={handleNext}
+          disabled={isLastPage}
           className={`px-4 py-2 rounded-md transition-colors duration-200 ${
             isLastPage
               ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-              : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+              : "bg-gray-200 text-gray-700 hover:bg-gray-300 cursor-pointer"
           }`}
-          disabled={isLastPage}
         >
           Next
         </button>

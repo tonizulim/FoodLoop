@@ -22,7 +22,7 @@ export default function BlogPosts() {
 
   const totalPages = Math.max(1, Math.ceil(blogsCount / PAGE_SIZE));
 
-  if (parseInt(page) > totalPages) notFound();
+  if (parseInt(page) > totalPages && !loading) notFound();
 
   return (
     <>
@@ -35,8 +35,16 @@ export default function BlogPosts() {
         ) : blogs.length === 0 ? (
           <Card>
             <CardContent className="py-12 text-center">
-              <Newspaper className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground">No blog posts yet.</p>
+              <div className="relative w-full max-w-md mx-auto h-64 sm:h-72 md:h-80">
+                <Image
+                  src="/empty_blog.png"
+                  alt="Empty blog image"
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
+                  className="object-contain rounded-md"
+                  priority
+                />
+              </div>
             </CardContent>
           </Card>
         ) : (

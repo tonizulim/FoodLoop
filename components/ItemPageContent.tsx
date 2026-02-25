@@ -23,7 +23,7 @@ export default function ItemPageContent({ id }: { id: number }) {
     <div className="min-h-[calc(100vh-4rem)] bg-secondary/30 py-12">
       <div className="container mx-auto px-4 max-w-2xl">
         <Card className="p-0 sm:p-2">
-          <div className="flex flex-col-reverse  gap-2 sm:flex-row items-center sm:justify-between">
+          <div className="flex flex-col-reverse gap-2 sm:flex-row items-start sm:justify-between">
             <div className="m-2">
               <CardHeader>
                 <div className="flex items-start justify-between gap-2">
@@ -65,7 +65,7 @@ export default function ItemPageContent({ id }: { id: number }) {
                 sizes="(max-width: 768px) 100vw,
          (max-width: 1024px) 50vw,
          33vw"
-                className="object-cover rounded-md"
+                className="object-cover rounded-md px-3 py-2"
               />
             </div>
           </div>

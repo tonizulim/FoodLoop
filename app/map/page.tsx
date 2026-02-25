@@ -43,7 +43,7 @@ export default function MapPage() {
       {!loading && filteredListings.length > 0 && (
         <div className="w-full lg:w-100 hidden lg:block space-y-3 overflow-y-auto max-h-[calc(100vh-8rem)]">
           <h2 className="text-lg font-semibold sticky top-0 bg-background py-2">
-            Available Pickups
+            Available Pickups: {filteredListings.length}
           </h2>
           {filteredListings.map((listing) => (
             <FoodCard key={listing.id} item={listing} />

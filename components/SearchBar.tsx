@@ -92,8 +92,6 @@
 //   );
 // }
 
-
-
 "use client";
 
 import { Input } from "@/components/ui/input";
@@ -128,10 +126,8 @@ export default function SearchBar({ onReset }: SearchBarProps) {
 
   return (
     <div className="max-w-4xl mx-auto mt-6 flex flex-col items-center gap-4">
-      
       {/* Search + Category row */}
       <div className="flex flex-col md:flex-row gap-4 w-full justify-center">
-        
         {/* Search input */}
         <div className="relative w-full md:w-1/2">
           <Search className="absolute left-3 top-3.5 h-5 w-5 text-muted-foreground pointer-events-none" />
@@ -169,19 +165,33 @@ export default function SearchBar({ onReset }: SearchBarProps) {
 
       {/* Reset button centered below */}
       {(searchQuery || filterFoodCategory > 0) && (
-        <div className="flex justify-center w-full">
-          <Button
-            size="sm"
-            variant="outline"
-            className="h-12 px-10"
+        <div className="mt-2 text-sm text-gray-600 text-center">
+          Filtering by{" "}
+          {searchQuery && (
+            <>
+              search: <span className="font-semibold">"{searchQuery}"</span>
+            </>
+          )}
+          {searchQuery && filterFoodCategory > 0 && " and "}
+          {filterFoodCategory > 0 && (
+            <>
+              category:{" "}
+              <span className="font-semibold">
+                {foodCategory.find((c) => c.id === filterFoodCategory)?.type}
+              </span>
+            </>
+          )}
+          <button
+            type="button"
             onClick={() => {
               setSearchQuery("");
               setFilterFoodCategory(0);
               onReset?.();
             }}
+            className="ml-2 text-blue-600 hover:text-blue-800 underline"
           >
-            Reset
-          </Button>
+            Clear search
+          </button>
         </div>
       )}
     </div>

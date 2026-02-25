@@ -15,7 +15,7 @@ export function useFilteredItems() {
 
   const { foodCategory } = useFoodCategory();
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [listings, setListings] = useState<Listing[]>([]);
 
   const [selectedLocation, setSelectedLocation] =

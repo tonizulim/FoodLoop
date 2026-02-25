@@ -38,14 +38,18 @@ export default function MyListingsPage() {
   const [deleting, setDeleting] = useState<any | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [fileName, setFileName] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const load = async () => {
       try {
+        setLoading(true);
         const data = await getUserListings();
         setListings(data);
       } catch {
         router.push("/login");
+      } finally {
+        setLoading(false);
       }
     };
     load();
@@ -79,7 +83,15 @@ export default function MyListingsPage() {
     <div className="container mx-auto py-8 max-w-4xl">
       <h1 className="text-3xl font-bold mb-6">My Listings</h1>
 
-      {listings.length === 0 && (
+      {loading && (
+        <div className="space-y-4">
+          <Card className="h-24 animate-pulse bg-muted" />
+          <Card className="h-24 animate-pulse bg-muted" />
+          <Card className="h-24 animate-pulse bg-muted" />
+        </div>
+      )}
+
+      {!loading && listings.length === 0 && (
         <div className="flex flex-col items-center justify-center text-center py-20 bg-muted/30 rounded-2xl">
           <Image
             src="/empty-food.png"
@@ -112,6 +124,7 @@ export default function MyListingsPage() {
                 </div>
                 <div className="ml-auto flex gap-2">
                   <Button
+                    className="cursor-pointer"
                     size="icon"
                     variant="outline"
                     onClick={() => {
@@ -137,6 +150,7 @@ export default function MyListingsPage() {
                     size="icon"
                     variant="outline"
                     onClick={() => setDeleting(l)}
+                    className="cursor-pointer"
                   >
                     <Trash2 className="h-4 w-4 text-destructive" />
                   </Button>
@@ -153,12 +167,14 @@ export default function MyListingsPage() {
                       </p>
                       <DialogFooter className="mt-4">
                         <Button
+                          className="cursor-pointer"
                           variant="outline"
                           onClick={() => setDeleting(null)}
                         >
                           Cancel
                         </Button>
                         <Button
+                          className="cursor-pointer"
                           variant="destructive"
                           onClick={async () => {
                             if (!deleting) return;
@@ -191,8 +207,9 @@ export default function MyListingsPage() {
             </Alert>
           )}
 
-          <div className="space-y-4">
-            <div>
+          <div className="space-y-6">
+            {/* Title */}
+            <div className="flex flex-col gap-1">
               <Label>Title</Label>
               <Input
                 value={form.title}
@@ -200,7 +217,8 @@ export default function MyListingsPage() {
               />
             </div>
 
-            <div>
+            {/* Description */}
+            <div className="flex flex-col gap-1">
               <Label>Description</Label>
               <Textarea
                 value={form.description}
@@ -210,41 +228,45 @@ export default function MyListingsPage() {
               />
             </div>
 
-            <div>
+            {/* Image */}
+            <div className="flex flex-col gap-1">
               <Label>Change image</Label>
-              <div>
-                <label className="flex items-center justify-left w-full h-12 px-4 border rounded-md cursor-pointer hover:bg-muted/70 transition">
+              <label className="flex items-center justify-left w-full h-12 px-4 border rounded-md cursor-pointer hover:bg-muted/70 transition">
                 <span className="text-sm text-muted-foreground">
-                    {form.image ? "Change image of your food" : "Upload image of your food"}
-                  </span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => {
-                      if (e.target.files?.[0]) {
-                        const file = e.target.files[0];
-                        setImageFile(file); 
-                        setFileName(file.name);
-                      }
-                    }}
-                  />
-                </label>
-              </div>
+                  {form.image
+                    ? "Change image of your food"
+                    : "Upload image of your food"}
+                </span>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    if (e.target.files?.[0]) {
+                      const file = e.target.files[0];
+                      setImageFile(file);
+                      setFileName(file.name);
+                    }
+                  }}
+                />
+              </label>
             </div>
 
-            <div>
+            {/* Published */}
+            <div className="flex flex-col gap-1">
               <Label>Published</Label>
               <Input
                 type="datetime-local"
                 value={form.publishedAt}
+                disabled
                 onChange={(e) =>
                   setForm({ ...form, publishedAt: e.target.value })
                 }
               />
             </div>
 
-            <div>
+            {/* Expires */}
+            <div className="flex flex-col gap-1">
               <Label>Expires</Label>
               <Input
                 type="datetime-local"
@@ -257,10 +279,15 @@ export default function MyListingsPage() {
           </div>
 
           <DialogFooter className="mt-4">
-            <Button variant="outline" onClick={() => setEditing(null)}>
+            <Button
+              className="cursor-pointer"
+              variant="outline"
+              onClick={() => setEditing(null)}
+            >
               Cancel
             </Button>
             <Button
+              className="cursor-pointer"
               onClick={async () => {
                 try {
                   let imageUrl = form.image;
