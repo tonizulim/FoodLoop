@@ -20,9 +20,17 @@
 - Link to final report: [**Final Report**](https://github.com/tonizulim/FoodLoop/blob/main/final_report.md) <!-- Replace with actual URL -->
 
 Test accounts:
-- admin@test.com - Admin123!
-- user1@gmail.com - User123!
-- user2@gmail.com - User123!
+- bobis@split.hr - Bobis123!
+- kampus.menza@split.hr - Kampus123!
+- fastfood.popeye@split.hr - Popeye123!
+- konoba.fife@split.hr - Fife123!
+- villa.spiza@split.hr - Villa123!
+- kantun.paulina@split.hr - Kantun123!
+- grill.masal@split.hr - Maslina123!
+- pizzeria.gust@split.hr - Gust123!
+- restaurant.dvor@split.hr - Dvor123!
+- babic@split.hr - Babic123!
+- tommy@split.hr - Tommy123!
 
 ### Semester Assignments
 
