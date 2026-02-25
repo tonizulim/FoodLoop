@@ -33,7 +33,7 @@ export const metadata: Metadata = {
      shortcut: "/logo.svg",
      apple: "/logo.png", // MUST be PNG for iOS
   },
-  },
+  //},
   
   // icons: {
   //   icon: [
