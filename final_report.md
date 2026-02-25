@@ -123,7 +123,7 @@ Brand Loyalty: Memorable “Easter eggs” like this create a positive and lasti
 
 ## 8. Post-Feedback Revision and UI/UX Improvements
 
-Following the initial review, the development team conducted a thorough audit of the application to address identified UI/UX inconsistencies and technical shortcomings. The goal was to transition the project from a "work-in-progress" state to a polished, user-centric application.
+Following the initial review, the we conducted a thorough audit of the application to address identified UI/UX inconsistencies and technical shortcomings. The goal was to transition the project from a "work-in-progress" state to a polished, user-centric application.
 
 ---
 
