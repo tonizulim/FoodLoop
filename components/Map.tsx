@@ -75,12 +75,16 @@
 //   return <div ref={mapContainer} style={{ width: "100%", height: "100%" }} />;
 // }
 
-
 "use client";
 
 import { useEffect, useRef } from "react";
 import maplibregl, { Map as MaplibreMap } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
+import { useState } from "react";
+import Image from "next/image";
+
+const INITIAL_CENTER: [number, number] = [16.4402, 43.5081];
+const INITIAL_ZOOM = 12;
 
 type Location = {
   lng: number;
@@ -94,10 +98,8 @@ type Listing = {
 type MapProps = {
   listings?: Listing[]; // optional
   selectedLocation?: Location | null;
-  setSelectedLocation?: React.Dispatch<
-    React.SetStateAction<Location | null>
-  >;
-  onLocationSelect?: (lng: number, lat: number) => void; // for picker mode
+  setSelectedLocation?: React.Dispatch<React.SetStateAction<Location | null>>;
+  onLocationSelect?: (lng: number, lat: number) => void;
 };
 
 export default function Map({
@@ -110,6 +112,44 @@ export default function Map({
   const map = useRef<MaplibreMap | null>(null);
   const markersRef = useRef<maplibregl.Marker[]>([]);
   const selectedMarkerRef = useRef<maplibregl.Marker | null>(null);
+  const [showReset, setShowReset] = useState(false);
+
+  const resetMapView = () => {
+    if (!map.current) return;
+
+    map.current.flyTo({
+      center: INITIAL_CENTER,
+      zoom: INITIAL_ZOOM,
+      duration: 800,
+    });
+
+    // opcionalno: ukloni selektovani marker
+    if (selectedMarkerRef.current) {
+      selectedMarkerRef.current.remove();
+      selectedMarkerRef.current = null;
+    }
+
+    if (setSelectedLocation) {
+      setSelectedLocation(null);
+    }
+    setShowReset(false);
+  };
+
+  const isMapAtInitialPosition = () => {
+    if (!map.current) return true;
+
+    const center = map.current.getCenter();
+    const zoom = map.current.getZoom();
+
+    const lngDiff = Math.abs(center.lng - INITIAL_CENTER[0]);
+    const latDiff = Math.abs(center.lat - INITIAL_CENTER[1]);
+    const zoomDiff = Math.abs(zoom - INITIAL_ZOOM);
+
+    // tolerancija jer su float vrijednosti
+    const tolerance = 0.0001;
+
+    return lngDiff < tolerance && latDiff < tolerance && zoomDiff < 0.01;
+  };
 
   // INIT MAP
   useEffect(() => {
@@ -118,8 +158,22 @@ export default function Map({
     map.current = new maplibregl.Map({
       container: mapContainer.current,
       style: process.env.NEXT_PUBLIC_MAP_URL,
-      center: [16.4402, 43.5081],
-      zoom: 12,
+      center: INITIAL_CENTER,
+      zoom: INITIAL_ZOOM,
+    });
+
+    map.current.on("move", () => {
+      if (!map.current) return;
+
+      const center = map.current.getCenter();
+      const zoom = map.current.getZoom();
+
+      const moved =
+        Math.abs(center.lng - INITIAL_CENTER[0]) > 0.001 ||
+        Math.abs(center.lat - INITIAL_CENTER[1]) > 0.001 ||
+        Math.abs(zoom - INITIAL_ZOOM) > 0.1;
+
+      setShowReset(moved);
     });
 
     map.current.addControl(new maplibregl.NavigationControl());
@@ -206,5 +260,20 @@ export default function Map({
     });
   }, [selectedLocation]);
 
-  return <div ref={mapContainer} style={{ width: "100%", height: "100%" }} />;
+  return (
+    <div className="relative w-full h-full">
+      <div ref={mapContainer} className="w-full h-full" />
+
+      {showReset && (
+        <Image
+          src="/go_home.png"
+          alt="Reset map"
+          width={24}
+          height={24}
+          className="w-16 h-16 absolute top-25 right-4 p-0 rounded-full cursor-pointer transition"
+          onClick={resetMapView}
+        />
+      )}
+    </div>
+  );
 }
