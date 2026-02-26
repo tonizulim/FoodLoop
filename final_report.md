@@ -121,5 +121,70 @@ Brand Loyalty: Memorable “Easter eggs” like this create a positive and lasti
 ![alt text](image-3.png)
 ![alt text](image-2.png)
 
-## 8. Conclusion 
+## 8. Post-Feedback Revision and UI/UX Improvements
+
+Following the initial review, the we conducted a thorough audit of the application to address identified UI/UX inconsistencies and technical shortcomings. The goal was to transition the project from a "work-in-progress" state to a polished, user-centric application.
+
+---
+
+### 8.1. Visual Identity and Professionalism
+
+**Issue:**  
+The landing page sections lacked visual cohesion, creating the impression of an unfinished mockup. This negatively impacted the *Consistency and Standards* and *Visibility of System Status* heuristics.
+
+**Resolution:**  
+We redesigned the hero and informational sections to achieve a more professional and cohesive aesthetic. Key visual elements were aligned, and placeholder-style graphics were replaced with high-quality UI components to enhance credibility and build user trust.
+
+**Favicon:**  
+A custom favicon was implemented to ensure the application feels complete and properly branded within the browser environment.
+
+<img width="533" height="238" alt="image" src="https://github.com/user-attachments/assets/4f4c7c49-8592-4f64-9195-8dd908bb4bfb" />
+
+---
+
+### 8.2. Minimalist Design & Conditional Logic
+
+**Issue:**  
+The "Reset" button was visible even when no filters or search queries were active. Positioned near primary Call-to-Action (CTA) areas, it created unnecessary visual noise and interference.
+
+**Resolution:**  
+We implemented conditional rendering for the "Reset" button. It now appears only when a user has actively applied a filter or entered a search term. This adheres to the principle of *Minimalist Design* by removing irrelevant interface elements.
+
+![Conditional Rendering Example](https://github.com/user-attachments/assets/f925649a-8ff9-4045-b47b-1d091b56fb1a)
+
+---
+
+### 8.3. Mapping and Navigation (Recognition vs. Recall)
+
+**Issue:**  
+The purpose of the map was unclear, and the default zoom level was too high, causing user disorientation ("Where am I?").
+
+**Resolution:**  
+- The map’s role was redefined as a primary discovery tool, linking geographic locations directly to available food listings.  
+- Zoom levels were recalibrated to provide better geographical context on initial load.  
+- Map markers were enhanced with clearer interactions to ensure a better *match between the system and the real world*.
+
+![Map Improvements](https://github.com/user-attachments/assets/83f07c85-1127-446b-83f9-87608a6067cf)
+
+---
+
+### 8.4. UI Polishing and Component Refinement
+
+**Issue:**  
+Significant issues were identified with the product cards, including layout inconsistencies, spacing problems, and unclear data presentation. The overall UI also lacked visual refinement.
+
+**Resolution:**
+
+- **Card Redesign:** Standardized padding, typography, and image handling across all cards to ensure visual uniformity.  
+- **Consistency:** Audited language and terminology to ensure the application consistently "speaks the user's language."  
+- **Polishing:** Fixed alignment issues and refined raw UI elements to eliminate the unpolished appearance.
+
+![Card Redesign](https://github.com/user-attachments/assets/2ee8a8af-2f20-4477-aace-a7427c55693b)
+
+---
+
+### 8.5. Testing and Stability
+
+To ensure production readiness, extensive cross-device testing was performed on the Vercel deployment. This process focused on identifying and resolving edge cases (e.g., long text overflows, missing images, inconsistent data rendering) to ensure the interface remains robust under varying data conditions.
+## 9. Conclusion 
 FoodLoop demonstrates the application of HCI principles in a real-world web project. Modular design, modern technologies, and focus on user experience make the application functional and easy to use. Future improvements could include gamification, AI-powered food suggestions, and more interactive maps, just for fun.
