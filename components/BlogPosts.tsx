@@ -9,6 +9,8 @@ import Link from "next/link";
 import { Pagination } from "@/components/Pagination";
 import { notFound } from "next/navigation";
 import { useBlogPosts } from "@/hooks/useBlogPosts";
+import BlogPostsSkeleton from "./BlogPostsSkeleton";
+import { useEffect } from "react";
 
 const PAGE_SIZE = parseInt(process.env.PAGE_SIZE || "6", 10);
 
@@ -24,14 +26,18 @@ export default function BlogPosts() {
 
   if (parseInt(page) > totalPages && !loading) notFound();
 
+  useEffect(() => {
+    if (!loading) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [page]);
+
   return (
     <>
       {/* Posts Grid */}
       <section className="container mx-auto px-4 py-10">
         {loading ? (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">Loading blog posts...</p>
-          </div>
+          <BlogPostsSkeleton />
         ) : blogs.length === 0 ? (
           <Card>
             <CardContent className="py-12 text-center">

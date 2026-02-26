@@ -289,6 +289,16 @@ export default function MyListingsPage() {
             <Button
               className="cursor-pointer"
               onClick={async () => {
+                // Konvertiraj stringove u Date objekte
+                const published = new Date(form.publishedAt);
+                const expires = new Date(form.expiresAt);
+
+                // Provjera
+                if (expires < published) {
+                  setError("Expires date cannot be before published date");
+                  return; // zaustavlja funkciju
+                }
+
                 try {
                   let imageUrl = form.image;
 
@@ -304,6 +314,7 @@ export default function MyListingsPage() {
 
                   setEditing(null);
                   setImageFile(null);
+                  setError(""); // očisti grešku
                   reload();
                 } catch {
                   setError("Update failed");

@@ -16,7 +16,7 @@ export function useBlogPosts() {
   const searchQuery = searchParams.get("search") ?? "";
   const page = searchParams.get("page") ?? "1";
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const [blogsCount, setBlogsCount] = useState(1);
 
